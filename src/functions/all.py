@@ -246,14 +246,14 @@ def read_template(filename):
             exit(5)
 
 templJSON={}
-TEMPLATE_FILE = r"\\inputs"+"\\template.json";
+TEMPLATE_FILE = "./functions/inputs"+"/template.json";
 if(os.path.exists(TEMPLATE_FILE)):
     templJSON = read_template(TEMPLATE_FILE)
 
     print("template does  exist")
 else:
-    print("template does not exist")
-    print(os.path.exists(TEMPLATE_FILE),"-",os.getcwd())
+    print("template json does not exist", os.listdir('.'))
+    print(os.path.exists('./functions/inputs/'),"-",os.getcwd())
     #pass
 
 if(len(templJSON.keys()) == 0):
