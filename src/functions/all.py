@@ -246,7 +246,7 @@ def read_template(filename):
             exit(5)
 
 templJSON={}
-TEMPLATE_FILE = r"D:\DJANGO\OMR\src\functions\inputs"+"\\template.json";
+TEMPLATE_FILE = r"\\inputs"+"\\template.json";
 if(os.path.exists(TEMPLATE_FILE)):
     templJSON = read_template(TEMPLATE_FILE)
 
