@@ -1,0 +1,61 @@
+
+  .navbar-toggler-icon {
+    background-color: #605052;
+    background-size: 20px;
+    border-radius: 20px 20px 50px 30px;
+}
+.bg{
+  background-color: #211a23;
+}
+  a:-webkit-any-link {
+color: -webkit-link;
+cursor: pointer;
+text-decoration: none;
+background-color: transparent;
+}
+
+.pull-left {
+float: left;
+}
+.logout-btn{
+  float: right;
+}
+
+
+.homeNav{
+  float:right;
+  margin-right:40px;
+}
+
+.templates-splitter{
+  margin-top: 50px;
+}
+.adder{
+  margin-top:200px;
+}
+.btn-add{
+  width:80px;
+}
+
+.input-group{
+  padding:20px;
+}
+.container{
+  margin-top:100px;
+}
+tbody{
+  height:300px;
+  overflow: scroll;
+}
+.pt-3-half {
+    padding-top: 1.4rem;
+    }
+
+.css-serial {
+counter-reset: serial-number;  /* Set the serial number counter to 0 */
+}
+
+.css-serial td:first-child:before {
+counter-increment: serial-number;  /* Increment the serial number counter */
+content: counter(serial-number);  /* Display the counter */
+}    

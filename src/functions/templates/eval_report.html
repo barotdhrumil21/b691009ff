@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" href="{% static "css/exam_detail.css" %}">
+{% endblock link %}
+
+{% block content %}
+<div class="pos-f-t">
+<div class="collapse" id="navbarToggleExternalContent">
+  <div class="bg p-4">
+    <h5 class="text-white h4">Hello, {{ request.user|capfirst }}</h5>
+    <span class="text-muted">An interested organization for online OMR evaluation </span>
+    <a href={% url 'logout-page' %}><button type="button" class="btn btn-outline-danger logout-btn">Logout</button></a>
+  </div>
+</div>
+<nav class="navbar navbar-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+</div>
+<a href="{% url 'home-page'%}"><h3 class="homeNav"><button type="button" class="btn btn-light">Home</button></h3></a>
+<!-- <a href={% url 'exam-eval' %} ><h3 class="homeNav"><button type="button" class="btn btn-light">back</button></h3></a> -->
+
+
+<div class="text-center">
+  report generated
+</div>
+<div align="center">
+ <button type="button" name="load_data" id="load_data" class="btn btn-info">Show data</button>
+</div>
+<div id="employee_table">
+
+<input type="hidden"  id="data" value="http://localhost:8000/media/output/{{result}}">
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+<script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF/jspdf.min.js"></script>
+<script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+<!-- Latest compiled and minified Locales -->
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/extensions/export/bootstrap-table-export.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/extensions/editable/bootstrap-table-editable.min.js"></script>
+<script src =  "{% static 'js/tableOLD.js' %}"></script>
+
+<script src =  "{% static 'js/report.js' %}"></script>
+{% endblock script %}

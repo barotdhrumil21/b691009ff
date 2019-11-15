@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+
+.navbar-toggler-icon {
+  background-color: #605052;
+  background-size: 20px;
+  border-radius: 20px 20px 50px 30px;
+}
+.bg{
+background-color: #211a23;
+}
+.logout-btn{
+  float: right;
+}
+.login-btn{
+  float: right;
+}
+
+
+
+*{
+  margin: 0;
+  padding: 0;
+  font-family: 'Ubuntu', sans-serif;
+}
+p{
+  color: #535274;
+}
+.login-form{
+  width: 450px;
+  background: #fff;
+  padding: 50px;
+  margin-left: 500px;
+  border-radius: 30px;
+  position: relative;
+}
+
+.title h1{
+  color: #535274;
+  letter-spacing: 5px;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.form,
+.form-items{
+  width: 100%;
+}
+
+.form-items .input{
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 15px 40px;
+  box-sizing: border-box;
+  background: #ebeef1;
+  border: 0px;
+  outline: none;
+  border-radius: 30px;
+}
+
+
+
+.form-btn{
+  background: #827ffe;
+  color: #fff;
+  padding: 12px;
+  margin-left: 120px;
+  border-radius: 25px;
+  cursor: pointer;
+
+}
+
+.form-items{
+  position: relative;
+  padding: 10px;
+}
+
+.form-items .fas{
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  color: #9a99aa;
+}

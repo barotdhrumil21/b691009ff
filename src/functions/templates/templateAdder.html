@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static "css/templateAdder.css/" %}">
+{% endblock link %}
+
+{% block content %}
+<div class="pos-f-t">
+<div class="collapse" id="navbarToggleExternalContent">
+  <div class="bg p-4">
+    <h5 class="text-white h4">Hello, {{ request.user|capfirst }}</h5>
+    <span class="text-muted">An interested organization for online OMR evaluation </span>
+    <a href={% url 'logout-page' %}><button type="button" class="btn btn-outline-danger logout-btn">Logout</button></a>
+  </div>
+</div>
+<nav class="navbar navbar-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+</div>
+
+
+<a href="{% url 'home-page'%}"><h3 class="homeNav"><button type="button" class="btn btn-light">Home</button></h3></a>
+<a href="{% url 'all-templates'%}"><h3 class="homeNav"><button type="button" class="btn btn-light">All Templates</button></h3></a>
+
+  <form  method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <div class="container">
+      <div class="row adder">
+        <div class="col-sm">
+          <div class="input-group">
+            {{form.pdf_name}}
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="input-group">
+            <div class="custom-file">
+              {{form.pdf}}
+              <label class="custom-file-label inputs" for="inputGroupFile04">Choose file</label>
+            </div>
+          </div>
+        </div>
+          <button type="submit" class="btn btn-dark btn-add">Add</button>
+      </div>
+    </div>
+  </form>
+{% endblock content %}

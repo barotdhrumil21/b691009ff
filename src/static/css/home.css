@@ -1,0 +1,52 @@
+
+  .demo-box {
+      border: 1px solid #ddd;
+      margin-top:20px;
+      padding: 10px;
+      text-align: center;
+      height: auto;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 6px 9px 0 rgba(0, 0, 0, .06);
+  }
+  .demo-box h5 {
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 10px;
+
+  }
+  .navbar-toggler-icon {
+    background-color: #605052;
+    background-size: 20px;
+    border-radius: 20px 20px 50px 30px;
+}
+.bg{
+  background-color: #211a23;
+}
+   .OMR-header {
+    margin-top:20px;
+    font-family: 'Shadows Into Light', cursive;
+    font-size: 75px;
+
+  }
+  a:-webkit-any-link {
+color: -webkit-link;
+cursor: pointer;
+text-decoration: none;
+background-color: transparent;
+}
+#header {
+padding: 6px 0;
+height: 70px;
+transition: all .5s;
+z-index: 997;
+background: #fff;
+box-shadow: 0 6px 9px 0 rgba(0, 0, 0, .06);
+}
+.pull-left {
+float: left;
+}
+.logout-btn{
+  float: right;
+}

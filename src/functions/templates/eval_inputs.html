@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" href="{% static "css/exam_detail.css" %}">
+{% endblock link %}
+
+{% block content %}
+<div class="pos-f-t">
+<div class="collapse" id="navbarToggleExternalContent">
+  <div class="bg p-4">
+    <h5 class="text-white h4">Hello, {{ request.user|capfirst }}</h5>
+    <span class="text-muted">An interested organization for online OMR evaluation </span>
+    <a href={% url 'logout-page' %}><button type="button" class="btn btn-outline-danger logout-btn">Logout</button></a>
+  </div>
+</div>
+<nav class="navbar navbar-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+</div>
+<a href="{% url 'home-page'%}"><h3 class="homeNav"><button type="button" class="btn btn-light">Home</button></h3></a>
+<a href={% url 'exam-eval' %} ><h3 class="homeNav"><button type="button" class="btn btn-light">back</button></h3></a>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+        <form  method="POST" enctype="multipart/form-data">{% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="btn btn-dark" name="post_img">Add</button>
+
+        </form>
+
+          <a href="{% url 'report-eval' %}" id="reportGen"><button type="submit" class="btn btn-dark">Generate Report</button></a>
+
+
+
+
+    </div>
+    <div class="col">
+      <div class ="files">
+        {% for file in files %}
+        <li>{{file}}&nbsp&nbsp&nbsp&nbsp<a href="/functions/exam-detail/inputs/delete/{{file}}/{{object.first.exam_name}}"><button class="btn btn-light" name="delete_img">Delete</button></a></li>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}

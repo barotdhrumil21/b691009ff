@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" href="{% static "css/all_templates.css" %}">
+{% endblock link %}
+
+{% block content %}
+
+
+<div class="pos-f-t">
+<div class="collapse" id="navbarToggleExternalContent">
+  <div class="bg p-4">
+    <h5 class="text-white h4">Hello, {{ request.user|capfirst }}</h5>
+    <span class="text-muted">An interested organization for online OMR evaluation </span>
+    <a href={% url 'logout-page' %}><button type="button" class="btn btn-outline-danger logout-btn">Logout</button></a>
+  </div>
+</div>
+<nav class="navbar navbar-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+</div>
+
+<a href="{% url 'home-page'%}"><h3 class="homeNav"><button type="button" class="btn btn-light">Home</button></h3></a>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-4">
+           <div class="list-group" id="list-tab" role="tablist">
+             {% for template in object_list %}
+              <a class="list-group-item list-group-item-action" id="list-{{template.pdf_name}}-list" data-toggle="list" href="#{{template.pdf_name }}" role="tab" aria-controls="{{template.pdf_name}}">{{template.pdf_name}}</a>
+             {% endfor %}
+           </div>
+        </div>
+       <div class="col-8">
+         <div class="tab-content" id="nav-tabContent">
+           {% for template in object_list %}
+           <div class="tab-pane fade" id="{{template.pdf_name}}" role="tabpanel" aria-labelledby="list-{{template.pdf_name}}-list"><iframe src="{{template.pdf.url}}" frameborder="0" height="600px" width="500px"></iframe></div>
+           {% endfor %}
+         </div>
+       </div>
+      </div>
+
+    </div>
+
+{% endblock content %}

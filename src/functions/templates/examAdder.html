@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block link %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="{% static 'css/table.css' %}">
+<link rel="stylesheet" href="{% static 'css/exam_adder.css' %}">
+{% endblock link %}
+
+{% block content %}
+<div class="pos-f-t">
+<div class="collapse" id="navbarToggleExternalContent">
+  <div class="bg p-4">
+    <h5 class="text-white h4">Hello, {{ request.user|capfirst }}</h5>
+    <span class="text-muted">An interested organization for online OMR evaluation </span>
+    <a href={% url 'logout-page' %}><button type="button" class="btn btn-outline-danger logout-btn">Logout</button></a>
+  </div>
+</div>
+<nav class="navbar navbar-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+</div>
+<a href="{% url 'home-page'%}"><h3 class="homeNav"><button type="button" class="btn btn-light">Home</button></h3></a>
+<a href={% url 'all-exams' %} ><h3 class="homeNav"><button type="button" class="btn btn-light">Exams</button></h3></a>
+
+
+<div class="container">
+  <form  method="POST" enctype="multipart/form-data">{% csrf_token %}
+  <div class="row">
+    <div class="col-sm">
+      <div class="input-group">
+        {{form.exam_name}}
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="input-group">
+        <div class="input-group-append">
+          {{form.template}}
+          <label class="input-group-text" for="inputGroupSelect02">Template</label>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm">
+    <div class="input-group">
+        <button type="submit" class="btn btn-dark">BUILD EXAM</button>
+    </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm">
+      <div class="input-group">
+        <div class="custom-file">
+          {{form.ansKey}}
+          <label class="custom-file-label inputs" for="inputGroupFile04">Build an answer key by AnswerKeyBuilder provided below</label>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-sm">
+      <div class="input-group">
+        <div class="custom-file">
+          {{form.ansKeyImg}}
+          <label class="custom-file-label inputs" for="inputGroupFile004">Scanned answer key </label>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  </form>
+
+
+      <div class="card-body">
+
+              <div>
+                      <div class="row">
+                          <div class="col input-group">correct marks: <input type="number" name="default marks" id="def-cmarks"></div>
+                          <div class="col">wrong marks: <input type="number" name="wrong marks" id="def-wmarks"></div>
+                      </div>
+                      <div class="row">
+                          <div class="col">subject: <input type="text" name="subject" id="def-sub"></div>
+                          <div class="col">Enter no of Rows: <input type="number" name="n of rows" id="inputno"></div>
+                          <div class="col"><span class="table-add1 float-right mb-3 mr-2"><a href="#!" class="text-success"><i
+                              class="fad fa-plus fa-2x" aria-hidden="true">ADD Rows</i></a></span></div>
+                      </div>
+                  </div>
+        <div id="table" class="table-editable">
+          <!-- <span class="table-add float-right mb-3 mr-2"><a href="#!" class="text-success"><i
+              class="fad fa-plus fa-2x" aria-hidden="true">ADD</i></a></span> -->
+
+          <table
+          data-show-export="true"
+          data-toggle="table"
+          class="css-serial table-dark table table-bordered table-responsive-md table-striped text-center">
+            <thead>
+              <tr>
+                <th class="text-center">Question no</th>
+                <th class="text-center">PossibleAns</th>
+                <th class="text-center">Ans</th>
+                <th class="text-center">correct marks</th>
+                <th class="text-center">wrong marks</th>
+                <th class="text-center">subject</th>
+                <th class="text-center">Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="pt-3-half" contenteditable="true"></td>
+                <td class="pt-3-half" contenteditable="true"></td>
+                <td class="pt-3-half" contenteditable="true"></td>
+                <td class="pt-3-half" contenteditable="true"></td>
+                <td class="pt-3-half" contenteditable="true"></td>
+                <td class="pt-3-half" contenteditable="true"></td>
+                <td>
+                  <span class="table-remove"><button type="button"
+                      class="btn btn-danger btn-rounded btn-sm my-0 ">Remove</button></span>
+                </td>
+              </tr>
+
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+</div>
+
+{% endblock content %}
+
+{% block script %}
+<script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+<script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF/jspdf.min.js"></script>
+<script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+<!-- Latest compiled and minified Locales -->
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/extensions/export/bootstrap-table-export.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/extensions/editable/bootstrap-table-editable.min.js"></script>
+<script src =  "{% static 'js/tableOLD.js' %}"></script>
+{% endblock script %}

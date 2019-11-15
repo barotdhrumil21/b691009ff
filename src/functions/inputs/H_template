@@ -1,0 +1,18 @@
+{
+  "Dimensions": [300, 400 ],
+  "BubbleDimensions": [20, 20 ],
+  "Concatenations" : {},
+  
+  "Singles" : ["q1","q2","q3","q4","q5"],
+  "MCQBlock1": {
+    "qType": "QTYPE_MCQ5",
+    "orig": [0, 0],
+    "qNos": [
+      [
+        ["q1", "q2", "q3", "q4", "q5"]
+      ]
+    ],  
+    "gaps" : [30, 30 ],
+    "bigGaps" : [30, 30]
+  }
+}

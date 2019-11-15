@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static "css/landing.css" %}">
+{% endblock link %}
+
+
+{% block content %}
+
+<div class="pos-f-t">
+<div class="collapse" id="navbarToggleExternalContent">
+  <div class="bg p-4">
+    <h5 class="text-white h4">Welcome,</h5>
+    <span class="text-muted">This is an interactive OMR evaluation webservice </span>
+    <button type="button" class="btn btn-outline-success login-btn">Login</button>
+  </div>
+</div>
+<nav class="navbar navbar-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+</div>
+
+<div class="login-form">
+  <form action='.' method="POST">{% csrf_token %}
+  <div class="title">
+    <h1>Sign up</h1>
+  </div>
+  {% for field in form %}
+    {% if field.errors %}
+    <div class="alert alert-primary" role="alert">
+    {{ field.errors|escape }}
+    </div>
+    {% endif %}
+  {% endfor %}
+  <div class="form">
+    <div class="form-items">
+      {{form.username}}
+      <i class="fas fa-user"></i>
+    </div>
+    <div class="form-items">
+      {{form.password}}
+      <i class="fas fa-envelope"></i>
+    </div>
+    <div class="form-items">
+      {{form.email}}
+      <i class="fas fa-envelope"></i>
+    </div>
+
+  </div>
+    <button type="submit" class="form-btn btn-success">Sign up</button>
+    <div class="form-items">
+     <p> Already have an account? <a href="/welcome/">Login </a>  </p>
+    </div>
+    </form>
+</div>
+
+
+{% endblock content %}

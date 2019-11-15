@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div >
+  <a href="{% url 'pdf-adder' %}"><h1> <-- back</h1></a>
+  <a href="/functions/delete/{{obj.id}}"><button type="button" class="btn btn-danger">Delete</button></a>
+</div>
+<div style="text-align:center">
+<iframe src="{{obj.pdf.url}}" frameborder="0" height="600px" width="500px"></iframe>
+  </div>
+{% endblock content %}

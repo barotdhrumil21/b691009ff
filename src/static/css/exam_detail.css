@@ -1,0 +1,49 @@
+
+  .navbar-toggler-icon {
+    background-color: #605052;
+    background-size: 20px;
+    border-radius: 20px 20px 50px 30px;
+}
+.bg{
+  background-color: #211a23;
+}
+  a:-webkit-any-link {
+color: -webkit-link;
+cursor: pointer;
+text-decoration: none;
+background-color: transparent;
+}
+
+.pull-left {
+float: left;
+}
+.logout-btn{
+  float: right;
+}
+form{
+  margin-top: 50px;
+}
+.files{
+  margin-top: 50px;
+  height:400px;
+  overflow-y: scroll;
+}
+
+
+.homeNav{
+  float:right;
+  margin-right:40px;
+}
+
+.templates-splitter{
+  margin-top: 30px;
+}
+
+.template-list{
+  margin-top:20px;
+  margin-left:200px;
+}
+
+#reportGen{
+  margin-top: 30px;
+}
