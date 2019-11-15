@@ -1,6 +1,6 @@
 import os
 import glob
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render,redirect,get_object_or_404
 #from django.core.urlresolvers import reverse
 from django.views.generic import(
@@ -18,6 +18,9 @@ from .models import (
 from .all import *
 import pdfkit
 from django.contrib.auth.decorators import login_required
+
+from django.conf import settings
+
 # Create your views here.
 
 
@@ -121,7 +124,7 @@ class multiple_inputs(FormView):
         #context = super().get_context_data(**kwargs)
         files_list =[]
         if form.is_valid():
-            fs=FileSystemStorage(location=r'D:\DJANGO\OMR\src\functions\inputs\OMR_Files\MobileCameraBased\JE')
+            fs=FileSystemStorage(location=r'.\functions\inputs\OMR_Files\MobileCameraBased\JE')
             for f in files:
                 # Do something with each file.
                 f_name=f.name
@@ -138,9 +141,9 @@ class multiple_inputs(FormView):
 
     def get_context_data(self,*args,**kwargs):
         context = super().get_context_data(**kwargs)
-        fs =FileSystemStorage(location=r'D:\DJANGO\OMR\src\functions\inputs\OMR_Files\MobileCameraBased\JE')
-        #print(fs.listdir(path=r'D:\DJANGO\OMR\src\functions\inputs\OMR_Files\MobileCameraBased\JE'))
-        context['files']=fs.listdir(path=r'D:\DJANGO\OMR\src\functions\inputs\OMR_Files\MobileCameraBased\JE')[1]
+        fs =FileSystemStorage(location=r'.\functions\inputs\OMR_Files\MobileCameraBased\JE')
+        #print(fs.listdir(path=r'.\functions\inputs\OMR_Files\MobileCameraBased\JE'))
+        context['files']=os.listdir(path=r'.\functions\inputs\OMR_Files\MobileCameraBased\JE')[1]
         # Add in a QuerySet of all the books
         obj = Exam.objects.filter(exam_name=self.kwargs['name'])
         #print(obj.first)
@@ -152,7 +155,7 @@ class multiple_inputs(FormView):
 def delete_img(request,*args,**kwargs):
     #print("D E L E T E")
     #url = reverse(url_name, args = args)
-    fs=FileSystemStorage(location=r'D:\DJANGO\OMR\src\functions\inputs\OMR_Files\MobileCameraBased\JE')
+    fs=FileSystemStorage(location=r'.\functions\inputs\OMR_Files\MobileCameraBased\JE')
     fs.delete(kwargs['fname'])
     return redirect('exam-detail-input',kwargs['exam'])
 
@@ -168,15 +171,28 @@ class eval(ListView):
             #print(Exam.objects.filter(user=self.request.user)   )
             return Exam.objects.filter(user=self.request.user)
 
+#download csv file on make
+def download(request, path):
+    file_path = os.path.join(settings.MEDIA_ROOT, path)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read())
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            return response
+    raise Http404
+
+
 def ReportEval(request,*args,**kwargs):
-        results_dir =FileSystemStorage(location=r'D:\DJANGO\OMR\src\outputs\Results')
-        media_result_dir = FileSystemStorage(location=r'D:\DJANGO\OMR\src\media\output')
-        
-        a=r"D:\DJANGO\OMR\src\functions\inputs\OMR_Files\MobileCameraBased\JE"
+        results_dir =FileSystemStorage(location=r'.\functions\outputs\Results')
+        media_result_dir = FileSystemStorage(location=r'.\media\output')
+
+        a=r".\functions\inputs\OMR_Files\MobileCameraBased\JE"
         #l = [a]
+
         main(a, directory = True)
 
-        list_of_files = glob.glob(r'D:\DJANGO\OMR\src\outputs\Results\*') # * means all if need specific format then *.csv
+        list_of_files = glob.glob(r".\functions\outputs\Results\*") # * means all if need specific format then *.csv
+        #print("lof: ", list_of_files)
         latest_file = max(list_of_files, key=os.path.getctime)
         report=latest_file.split('\\')[-1]
 
@@ -184,7 +200,7 @@ def ReportEval(request,*args,**kwargs):
         media_result_dir.save(report,to_be_copied)
 
         context ={
-        'result':report
+        'result': report
 
         }
         print(context['result'])

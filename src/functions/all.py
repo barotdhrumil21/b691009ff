@@ -9,16 +9,14 @@ import re
 import glob
 import sys
 import string
-from random import *
+import random
 
-with open('debug.txt','a') as file:
-    file.write('imports done')
 
 #imports from globals.py
-OMR_INPUT_DIR ='inputs/OMR_Files/'
-saveMarkedDir='outputs/CheckedOMRs/'
-resultDir='outputs/Results/'
-manualDir='outputs/Manual/'
+OMR_INPUT_DIR ='./functions/inputs/OMR_Files/'
+saveMarkedDir='./functions/outputs/CheckedOMRs/'
+resultDir='./functions/outputs/Results/'
+manualDir='./functions/outputs/Manual/'
 errorsDir=manualDir+'ErrorFiles/'
 badRollsDir=manualDir+'BadRollNosFiles/'
 multiMarkedDir=manualDir+'MultiMarkedFiles/'
@@ -86,8 +84,6 @@ Sections = {
 
 }
 #end imports from globals.py
-with open('debug.txt','a') as file:
-    file.write('globals imports done')
 
 #imports from template.py
 
@@ -269,8 +265,6 @@ for k, QBlocks in templJSON.items():
         TEMPLATES.addQBlocks(k, QBlocks)
 #end imports from template.py
 
-with open('debug.txt','a') as file:
-    file.write('templates imports done')
 #imports from utils.py
 
 #print('Checking Directories...')
@@ -814,8 +808,6 @@ def readResponse(image,name,savedir=None,autoAlign=False):
 
 #end imports from utils.py
 
-with open('debug.txt','a') as file:
-    file.write('utils imports done')
 
 #imports from main.py
 def move(error_code, filepath,filepath2):
@@ -930,8 +922,6 @@ def evaluate(resp,explain=False):
 
 
 #end imports from main.py
-with open('debug.txt','a') as file:
-    file.write('main imports done')
 
 #main function called by external application
 args = {"noCropping":True, "noMarkers":True, "autoAlign":False, "setLayout":False}
@@ -945,7 +935,7 @@ def main(imagePathListOrDirectory, directory=False):
     else:
         allOMRs = imagePathListOrDirectory
 
-    #print("scanned all omrs: ", allOMRs)
+    print("scanned all omrs: ", allOMRs)
 
 
     timeNowHrs=strftime("%I%p",localtime())
@@ -1038,7 +1028,7 @@ def main(imagePathListOrDirectory, directory=False):
             results_line = [filename,score]+respArray
             pd.DataFrame(results_line, dtype=str).T.to_csv(filesObj["Results"], quoting = QUOTE_NONNUMERIC,header=False,index=False)
             #print("[%d] Graded with score: %.2f" % (filesCounter, score), '\t',newfilename)
-            
+
         else:
             #print('[%d] MultiMarked, moving File: %s' % (filesCounter, newfilename))
             newfilepath = multiMarkedDir+squadlang+filename
