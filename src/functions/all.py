@@ -928,6 +928,10 @@ args = {"noCropping":True, "noMarkers":True, "autoAlign":False, "setLayout":Fals
 
 def main(imagePathListOrDirectory, directory=False):
     global args, filesNotMoved, filesMoved
+    pa = r"/home/danniel/b691009ff/src/functions/inputs/OMR_Files/MobileCameraBased/JE"
+    for i in os.listdir(pa):
+        pass#os.remove(pa+r'/'+i)
+        #print(i, 'removed')
     #print("inside main function")##print("")
     #make a list of paths of all the images to be graded
     if directory:
@@ -935,7 +939,7 @@ def main(imagePathListOrDirectory, directory=False):
     else:
         allOMRs = imagePathListOrDirectory
 
-    print("scanned all omrs: ", allOMRs)
+    #print("scanned all omrs: ", allOMRs)
 
 
     timeNowHrs=strftime("%I%p",localtime())
@@ -998,7 +1002,7 @@ def main(imagePathListOrDirectory, directory=False):
 
         #print("filepath: ", filepath)
         filename = re.search(r'.*/(.*)',filepath,re.IGNORECASE).groups()[0]
-
+        print("file = ", filepath)
         inOMR = cv2.imread(filepath,cv2.IMREAD_GRAYSCALE)
         OMRcrop = getROI(inOMR,filename, noCropping=args["noCropping"], noMarkers=args["noMarkers"])
         if(OMRcrop is None):
@@ -1035,4 +1039,7 @@ def main(imagePathListOrDirectory, directory=False):
             if(move(MULTI_BUBBLE_WARN, filepath, newfilepath)):
                 mm_line = [filename,"NA"]+respArray
                 pd.DataFrame(mm_line, dtype=str).T.to_csv(filesObj["MultiMarked"], quoting = QUOTE_NONNUMERIC,header=False,index=False)
+        
+        print(filepath)
+        os.remove(filepath)
     return filesObj["Results"]
