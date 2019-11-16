@@ -143,7 +143,9 @@ class multiple_inputs(FormView):
         context = super().get_context_data(**kwargs)
         fs =FileSystemStorage(location=r'.\functions\inputs\OMR_Files\MobileCameraBased\JE')
         #print(fs.listdir(path=r'.\functions\inputs\OMR_Files\MobileCameraBased\JE'))
-        context['files']=os.listdir(path=r'.\functions\inputs\OMR_Files\MobileCameraBased\JE')[1]
+        print("cwd: ", os.getcwd())
+        context['files']=os.listdir(r'.\functions\inputs\OMR_Files\MobileCameraBased\JE')[1]
+        print("cwd: ", os.listdir('.'))
         # Add in a QuerySet of all the books
         obj = Exam.objects.filter(exam_name=self.kwargs['name'])
         #print(obj.first)
