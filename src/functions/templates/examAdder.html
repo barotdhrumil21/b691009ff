@@ -33,73 +33,69 @@
 <div class="container">
   <form  method="POST" enctype="multipart/form-data">{% csrf_token %}
   <div class="row">
-    <div class="col-sm">
-      <div class="input-group">
+    <div class="col-sm" style="margin:5px;text-align: center; height: 30vh; font-size:24px; border:2px solid gray; border-radius:50px">
+      <p style="margin-top:15px">Enter a name for this exam. For example "<b>Exam-21/12/2019-math</b>"</p>
+      <div class="input-group" style="padding:0; border: 3px solid gray; border-radius:6px">
         {{form.exam_name}}
       </div>
     </div>
-    <div class="col-sm">
-      <div class="input-group">
-        <div class="input-group-append">
+    <div class="col-sm" style="text-align: center; height: 30vh; font-size:24px; border:2px solid gray; border-radius:50px">
+      <p style="margin-top:15px">Choose one of the templates from menu below</p>
+      <div class="input-group"  style="padding:0;">
+        <div class="input-group-append" style="width:50vh; border: 3px solid gray; border-radius:6px">
           {{form.template}}
-          <label class="input-group-text" for="inputGroupSelect02">Template</label>
+
         </div>
       </div>
     </div>
-    <div class="col-sm">
-    <div class="input-group">
-        <button type="submit" class="btn btn-dark">BUILD EXAM</button>
+    <div class="col-sm" style="text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
+      <p style="margin-top:15px">Click this button after completing the form</p>
+    <div class="input-group" style="margin-left:60px">
+        <button type="submit" class="btn" style="display:inline; border: 3px solid gray; border-radius:50px;margin:10px;
+        padding:15px;font-size:15px; background-color:#275091; color:white"><b>BUILD EXAM</b></button>
     </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-sm">
-      <div class="input-group">
-        <div class="custom-file">
-          {{form.ansKey}}
-          <label class="custom-file-label inputs" for="inputGroupFile04">Build an answer key by AnswerKeyBuilder provided below</label>
-        </div>
-      </div>
 
-    </div>
-    <div class="col-sm">
-      <div class="input-group">
-        <div class="custom-file">
-          {{form.ansKeyImg}}
-          <label class="custom-file-label inputs" for="inputGroupFile004">Scanned answer key </label>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  </form>
-
-
-      <div class="card-body">
-
+  <div class="card-body">
               <div>
                       <div class="row">
-                          <div class="col input-group">correct marks: <input type="number" name="default marks" id="def-cmarks"></div>
-                          <div class="col">wrong marks: <input type="number" name="wrong marks" id="def-wmarks"></div>
+                        <div class="col-sm" style="text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
+                          <p style="margin-top:15px">Enter Marks For Correct Answer</p>
+                          <div class="col input-group" >Correct Marks &nbsp<input style="width:39vh; border: 3px solid gray; border-radius:6px" type="number" name="default marks" id="def-cmarks"></div>
+                          </div>
+                        <div class="col-sm" style="margin-left:5px; text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
+                          <p style="margin-top:15px">Enter Marks For Wrong Answer</p>
+                          <div class="col input-group">Wrong Marks &nbsp<input style="width:40vh; border: 3px solid gray; border-radius:6px" type="number" name="wrong marks" id="def-wmarks"></div>
+                          </div>
                       </div>
                       <div class="row">
-                          <div class="col">subject: <input type="text" name="subject" id="def-sub"></div>
-                          <div class="col">Enter no of Rows: <input type="number" name="n of rows" id="inputno"></div>
-                          <div class="col"><span class="table-add1 float-right mb-3 mr-2"><a href="#!" class="text-success"><i
-                              class="fad fa-plus fa-2x" aria-hidden="true">ADD Rows</i></a></span></div>
+                        <div class="col-sm" style="text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
+                          <p style="margin-top:15px">Enter Name Of One Subject, You Can Add Many Subjects One By One</p>
+                            <div class="col"><input style="width:60vh; border: 3px solid gray; border-radius:6px" type="text" name="subject" id="def-sub"></div>
+                        </div>
+                          <div class="col-sm" style="margin-left:5px; text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
+                            <p style="margin-top:15px">Enter Number Of Rows For This Subject, You Can Add Many Rows For Different Subjects</p>
+
+                            <div class="col"><input style="width:60vh; border: 3px solid gray; border-radius:6px" type="number" name="n of rows" id="inputno"></div>
+                          </div>
+
                       </div>
+                      <div class="col-sm btn" ><span class="table-add1 float-right mb-3 mr-2">
+                        <a href="#!"><i  style="padding-left:40vh; padding-right:40vh; display:block; width:130vh; height:10vh; background-color:#275091;
+                        color:white; border: 3px solid gray; border-radius:50px; font-size:30px; padding-top:10px; color:white;"
+                          class="fad fa-plus fa-2x" aria-hidden="true" aria-expanded="true"
+                          >ADD Rows With Filled Details</i></a></span></div>
                   </div>
         <div id="table" class="table-editable">
           <!-- <span class="table-add float-right mb-3 mr-2"><a href="#!" class="text-success"><i
               class="fad fa-plus fa-2x" aria-hidden="true">ADD</i></a></span> -->
-
           <table
           data-show-export="true"
           data-toggle="table"
           class="css-serial table-dark table table-bordered table-responsive-md table-striped text-center">
+
             <thead>
               <tr>
                 <th class="text-center">Question no</th>
@@ -132,6 +128,30 @@
 
       </div>
 
+        <div class="row">
+          <div class="col-sm" style="text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
+            <p style="margin-top:15px">Fill answers, click on the down arrow above the table and click on one of the options, once you download the file upload it here</p>
+            <div class="input-group">
+              <div class="custom-file" style="width:50vh;height:7vh; border: 3px solid gray; border-radius:5px">
+                {{form.ansKey}}
+                <label class="custom-file-label inputs" for="inputGroupFile04">Upload File</label>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-sm" style="text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
+            <p style="margin-top:15px">Upload image file of OMR sheet with correct answers or fill answers bellow</p>
+            <div class="input-group">
+              <div class="custom-file" style="margin:36px; width:50vh;height:7vh; border: 3px solid gray; border-radius:5px">
+                {{form.ansKeyImg}}
+                <label class="custom-file-label inputs" for="inputGroupFile004" style="font-size:22px; text-align:left">Upload Correct Answers Image</label>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+</form>
 </div>
 
 {% endblock content %}

@@ -929,10 +929,6 @@ args = {"noCropping":True, "noMarkers":True, "autoAlign":False, "setLayout":Fals
 def main(imagePathListOrDirectory, directory=False):
     global args, filesNotMoved, filesMoved
     pa = r"/home/danniel/b691009ff/src/functions/inputs/OMR_Files/MobileCameraBased/JE"
-    for i in os.listdir(pa):
-        pass#os.remove(pa+r'/'+i)
-        #print(i, 'removed')
-    #print("inside main function")##print("")
     #make a list of paths of all the images to be graded
     if directory:
         allOMRs = list(glob.iglob(imagePathListOrDirectory+'/*.jpg')) + list(glob.iglob(imagePathListOrDirectory+'/*.png'))
@@ -997,6 +993,8 @@ def main(imagePathListOrDirectory, directory=False):
 
 
     for filepath in allOMRs:
+        if 'gitkeep' in filepath:
+            continue
         filesCounter+=1
         filepath = filepath.replace(os.sep,'/')
 
@@ -1039,7 +1037,7 @@ def main(imagePathListOrDirectory, directory=False):
             if(move(MULTI_BUBBLE_WARN, filepath, newfilepath)):
                 mm_line = [filename,"NA"]+respArray
                 pd.DataFrame(mm_line, dtype=str).T.to_csv(filesObj["MultiMarked"], quoting = QUOTE_NONNUMERIC,header=False,index=False)
-        
-        print(filepath)
+
+        #print(filepath)
         os.remove(filepath)
     return filesObj["Results"]

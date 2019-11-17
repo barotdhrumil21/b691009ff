@@ -22,10 +22,13 @@
 <a href="{% url 'home-page'%}"><h3 class="homeNav"><button type="button" class="btn btn-light">Home</button></h3></a>
 
 
+<div class="text-center" style="margin:50px;text-align: center; font-size:35px; ">
+Choose One Of The Exams Created Before And Upload Images</div>
 
-<div class="template-list">
+<div class="template-list" style=" padding-left:30vh; margin-top:20vh; text-align: center; height: auto; width:auto; font-size:24px;">
   {% for exam in exams %}
-  <a href="/functions/exam-detail/{{exam.exam_name}}/inputs"><li>{{exam.exam_name}}</li></a>
+  <a style="margin:10px; padding-left:40vh; padding-right:40vh; display:block; width:130vh; height:10vh; background-color:#275091;
+  color:white; border: 3px solid gray; border-radius:50px; font-size:30px; padding-top:10px; color:white;" href="/functions/exam-detail/{{exam.exam_name}}/inputs">{{exam.exam_name}}</a>
   {% endfor %}
 </div>
 

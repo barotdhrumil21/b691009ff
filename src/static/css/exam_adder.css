@@ -1,5 +1,5 @@
 
-  .navbar-toggler-icon {
+.navbar-toggler-icon {
     background-color: #605052;
     background-size: 20px;
     border-radius: 20px 20px 50px 30px;
@@ -58,4 +58,6 @@ counter-reset: serial-number;  /* Set the serial number counter to 0 */
 .css-serial td:first-child:before {
 counter-increment: serial-number;  /* Increment the serial number counter */
 content: counter(serial-number);  /* Display the counter */
-}    
+}
+
+/*dhrumil added stuff*/

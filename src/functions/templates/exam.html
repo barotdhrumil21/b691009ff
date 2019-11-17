@@ -23,11 +23,12 @@
 <a href={% url 'exam-adder' %} ><h3 class="homeNav"><button type="button" class="btn btn-light">back</button></h3></a>
 
 
-<div class="row exam-list">
+<div class="row exam-list" style="margin-top:20vh; text-align: center; height: auto; width:auto; font-size:24px;">
   <div class="col-4">
-    <div class="list-group" id="list-tab" role="tablist">
+    <div class="list-group" id="list-tab" role="tablist" style="padding-left:30vh">
         {% for exam in object_list %}
-      <a class="list-group-item list-group-item-action "href="/functions/exam-detail/{{exam.exam_name}}" role="tab" aria-controls="({{exam.exam_name}})">{{exam.exam_name}}</a>
+      <a style="margin:10px; padding-left:40vh; padding-right:40vh; display:block; width:130vh; height:10vh; background-color:#275091;
+      color:white; border: 3px solid gray; border-radius:50px; font-size:30px; padding-top:10px; color:white;" class="list-group-item list-group-item-action "href="/functions/exam-detail/{{exam.exam_name}}" role="tab" aria-controls="({{exam.exam_name}})">{{exam.exam_name}}</a>
       {% endfor %}
     </div>
   </div>

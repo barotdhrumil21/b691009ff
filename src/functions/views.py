@@ -76,7 +76,7 @@ def delete_template(request,id,*args,**kwargs):
 #"/functions/add-exam"
 class upload_exam_view(CreateView):
     model = Exam
-    form_class =exam_builder
+    form_class = exam_builder
     template_name = 'examAdder.html'
     def form_valid(self,form):
         form.instance.user = self.request.user
@@ -143,10 +143,13 @@ class multiple_inputs(FormView):
         context = super().get_context_data(**kwargs)
         fs =FileSystemStorage(location=r'./functions/inputs/OMR_Files/MobileCameraBased/JE')
         #print(fs.listdir(path=r'./functions/inputs/OMR_Files/MobileCameraBased/JE'))
+        #print("path: ", os.listdir(r'./functions/inputs/OMR_Files/MobileCameraBased/JE'))
         if len(os.listdir(r'./functions/inputs/OMR_Files/MobileCameraBased/JE'))>0:
-            context['files']=os.listdir(r'./functions/inputs/OMR_Files/MobileCameraBased/JE')[1]
+            context['files']=os.listdir(r'./functions/inputs/OMR_Files/MobileCameraBased/JE')
+
         else:
             context['files'] = ''
+        context['files'] = context['files'].remove('gitkeep')
         # Add in a QuerySet of all the books
         obj = Exam.objects.filter(exam_name=self.kwargs['name'])
         #print(obj.first)
@@ -197,8 +200,8 @@ def ReportEval(request,*args,**kwargs):
         list_of_files = glob.glob(r"./functions/outputs/Results/*") # * means all if need specific format then *.csv
         #print("lof: ", list_of_files)
         latest_file = max(list_of_files, key=os.path.getctime)
+        latest_file = latest_file.replace(os.sep,'/')
         report=latest_file.split('/')[-1]
-
         to_be_copied = results_dir.open(report,mode='rb')
         media_result_dir.save(report,to_be_copied)
 

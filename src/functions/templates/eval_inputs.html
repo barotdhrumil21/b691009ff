@@ -1,6 +1,31 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block link %}
+<style>
+  .upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+
+  .btn-special {
+    border: 2px solid gray;
+    color: white;
+    background-color: #275091;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }
+</style>
 <link rel="stylesheet" href="{% static "css/exam_detail.css" %}">
 {% endblock link %}
 
@@ -14,7 +39,8 @@
   </div>
 </div>
 <nav class="navbar navbar-dark">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"
+  aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 </nav>
@@ -27,12 +53,19 @@
   <div class="row">
     <div class="col">
         <form  method="POST" enctype="multipart/form-data">{% csrf_token %}
-        {{form.as_p}}
-        <button type="submit" class="btn btn-dark" name="post_img">Add</button>
+        <div class="col-sm" style=" margin:30px; text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
+          <p style="margin-top:15px">Upload all images that you want to grade under this test</p>
+          <div class="upload-btn-wrapper">
+            <button class="btn-special">Upload a file</button>
+            <input type="file" name="myfile" multiple>
+          </div>
+          <!--{{form.as_p}}-->
+        </div>
+        <button type="submit" class="btn btn-special col-sm" name="post_img" style="margin:30px;">Add Selected Images</button>
 
         </form>
 
-          <a href="{% url 'report-eval' %}" id="reportGen"><button type="submit" class="btn btn-dark">Generate Report</button></a>
+          <a class="" href="{% url 'report-eval' %}" id="reportGen" style="margin:30px;"><button type="submit" class="btn btn-special col-sm">Generate Report</button></a>
 
 
 
