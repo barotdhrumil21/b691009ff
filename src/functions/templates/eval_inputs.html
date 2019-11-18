@@ -56,10 +56,10 @@
         <div class="col-sm" style=" margin:30px; text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
           <p style="margin-top:15px">Upload all images that you want to grade under this test</p>
           <div class="upload-btn-wrapper">
-            <button class="btn-special">Upload a file</button>
-            <input type="file" name="myfile" multiple>
-          </div>
-          <!--{{form.as_p}}-->
+		  <button class="btn-special">Upload a file{{form.inputs}}</button>
+		  <!--<input type="file" name="myfile" multiple>-->
+	  </div>
+	  <!--{{form.as_p}}-->
         </div>
         <button type="submit" class="btn btn-special col-sm" name="post_img" style="margin:30px;">Add Selected Images</button>
 
