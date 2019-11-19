@@ -1,11 +1,17 @@
+$( "#export" ).click(function() {
+  $('table').csvExport();
+
+});
+
+
 const $tableID = $('#table');
+
 
  const newTr = ``;
 /*
  const newTr = `
 <tr class="hide">
 	<td class="pt-3-half" contenteditable="true">${document.getElementById("idno").innerHTML}</td>
-	<td class="pt-3-half" contenteditable="true">${document.getElementById("pans").innerHTML}</td>
 	<td class="pt-3-half" contenteditable="true">${document.getElementById("ans").innerHTML}</td>
 	<td class="pt-3-half" contenteditable="true">${defcmarks}</td>
 	<td class="pt-3-half" contenteditable="true">${defwmarks}</td>
@@ -25,7 +31,6 @@ $('.table-add1').on('click', 'i', () => {
 		const newTr = `
 		<tr class="hide">
 			<td class="pt-3-half" contenteditable="true"></td>
-			<td class="pt-3-half" contenteditable="true">4</td>
 			<td class="pt-3-half" contenteditable="true">A</td>
 			<td class="pt-3-half" contenteditable="true">${defcmarks}</td>
 			<td class="pt-3-half" contenteditable="true">${defwmarks}</td>
@@ -54,17 +59,9 @@ $('.table-add1').on('click', 'i', () => {
 */
 var rowno = document.getElementById('inputno').value;
 for (var i = 0; i < rowno; i++) {
-
-
-
 			$('tbody').append(newTr);
-
 }
 	});
-
-
-
-
 
 // Here code is for Add (Single row)
  $('.table-add').on('click', 'i', () => {
@@ -81,8 +78,7 @@ for (var i = 0; i < rowno; i++) {
 		var defsub = document.getElementById('def-sub').value ;
 		const newTr = `
 		<tr class="hide">
-			<td class="pt-3-half" contenteditable="true"></td>
-			<td class="pt-3-half" contenteditable="true">4</td>
+			<td class="pt-3-half" contenteditable="true"></td>>
 			<td class="pt-3-half" contenteditable="true">A</td>
 			<td class="pt-3-half" contenteditable="true">${defcmarks}</td>
 			<td class="pt-3-half" contenteditable="true">${defwmarks}</td>

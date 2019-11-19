@@ -90,16 +90,12 @@
                   </div>
         <div id="table" class="table-editable">
           <!-- <span class="table-add float-right mb-3 mr-2"><a href="#!" class="text-success"><i
-              class="fad fa-plus fa-2x" aria-hidden="true">ADD</i></a></span> -->
-          <table
-          data-show-export="true"
-          data-toggle="table"
-          class="css-serial table-dark table table-bordered table-responsive-md table-striped text-center">
 
+              class="fad fa-plus fa-2x" aria-hidden="true">ADD</i></a></span> -->          <button type="button" class="btn btn-light" style="margin-left:40vh;margin-bottom:10px; content-align:center; display:inline; border: 3px solid gray; border-radius:50px; padding:15px;font-size:18px; background-color:#275091; color:white" id="export">Click To Export Answer Key Once Full Table Is Complete</button>
+          <table class="css-serial table-dark table table-bordered table-responsive-md table-striped text-center">
             <thead>
               <tr>
                 <th class="text-center">Question no</th>
-                <th class="text-center">PossibleAns</th>
                 <th class="text-center">Ans</th>
                 <th class="text-center">correct marks</th>
                 <th class="text-center">wrong marks</th>
@@ -108,19 +104,6 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="pt-3-half" contenteditable="true"></td>
-                <td class="pt-3-half" contenteditable="true"></td>
-                <td class="pt-3-half" contenteditable="true"></td>
-                <td class="pt-3-half" contenteditable="true"></td>
-                <td class="pt-3-half" contenteditable="true"></td>
-                <td class="pt-3-half" contenteditable="true"></td>
-                <td>
-                  <span class="table-remove"><button type="button"
-                      class="btn btn-danger btn-rounded btn-sm my-0 ">Remove</button></span>
-                </td>
-              </tr>
-
 
             </tbody>
           </table>
@@ -131,16 +114,20 @@
         <div class="row">
           <div class="col-sm" style="text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
             <p style="margin-top:15px">Fill answers, click on the down arrow above the table and click on one of the options, once you download the file upload it here</p>
+            <div id="inputGroupFile04"></div>
             <div class="input-group">
               <div class="custom-file" style="width:50vh;height:7vh; border: 3px solid gray; border-radius:5px">
                 {{form.ansKey}}
-                <label class="custom-file-label inputs" for="inputGroupFile04">Upload File</label>
+                <label class="custom-file-label inputs" for="inputGroupFile04">upload </label>
+
               </div>
             </div>
+
 
           </div>
           <div class="col-sm" style="margin-left:5px; text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
             <p style="margin-top:15px">Upload image file of OMR sheet with correct answers or fill answers bellow</p>
+            <div id="inputGroupFile05"></div>
             <div class="input-group">
               <div class="custom-file" style="margin:36px; width:50vh;height:7vh; border: 3px solid gray; border-radius:5px">
                 {{form.ansKeyImg}}
@@ -168,5 +155,9 @@
 <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/locale/bootstrap-table-zh-CN.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/extensions/export/bootstrap-table-export.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/extensions/editable/bootstrap-table-editable.min.js"></script>
+<script src = "{% static 'js/csvExport.js' %} " ></script>
 <script src =  "{% static 'js/tableOLD.js' %}"></script>
+<script src =  "{% static 'js/fileName.js' %}"></script>
+
+
 {% endblock script %}

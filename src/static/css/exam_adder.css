@@ -61,3 +61,9 @@ content: counter(serial-number);  /* Display the counter */
 }
 
 /*dhrumil added stuff*/
+
+.examname{
+  text-align: center;
+  height: 5vh;
+  color: yellow;
+}

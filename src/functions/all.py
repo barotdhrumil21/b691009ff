@@ -245,8 +245,7 @@ templJSON={}
 TEMPLATE_FILE = "./functions/inputs"+"/template.json";
 if(os.path.exists(TEMPLATE_FILE)):
     templJSON = read_template(TEMPLATE_FILE)
-
-    print("template does  exist")
+    #print("template does  exist")
 else:
     print("template json does not exist", os.listdir('.'))
     print(os.path.exists('./functions/inputs/'),"-",os.getcwd())
@@ -1000,7 +999,7 @@ def main(imagePathListOrDirectory, directory=False):
 
         #print("filepath: ", filepath)
         filename = re.search(r'.*/(.*)',filepath,re.IGNORECASE).groups()[0]
-        print("file = ", filepath)
+        #print("file = ", filepath)
         inOMR = cv2.imread(filepath,cv2.IMREAD_GRAYSCALE)
         OMRcrop = getROI(inOMR,filename, noCropping=args["noCropping"], noMarkers=args["noMarkers"])
         if(OMRcrop is None):
@@ -1024,6 +1023,7 @@ def main(imagePathListOrDirectory, directory=False):
             respArray.append(resp[k])
 
         OUTPUT_SET.append([filename]+respArray)
+        
         if(MultiMarked == 0):
             filesNotMoved+=1;
             newfilepath = savedir+newfilename
@@ -1033,11 +1033,13 @@ def main(imagePathListOrDirectory, directory=False):
 
         else:
             #print('[%d] MultiMarked, moving File: %s' % (filesCounter, newfilename))
-            newfilepath = multiMarkedDir+squadlang+filename
-            if(move(MULTI_BUBBLE_WARN, filepath, newfilepath)):
-                mm_line = [filename,"NA"]+respArray
-                pd.DataFrame(mm_line, dtype=str).T.to_csv(filesObj["MultiMarked"], quoting = QUOTE_NONNUMERIC,header=False,index=False)
-
+            ##newfilepath = multiMarkedDir+squadlang+filename
+            ##if(move(MULTI_BUBBLE_WARN, filepath, newfilepath)):
+            ##    mm_line = [filename,"NA"]+respArray
+            ##    pd.DataFrame(mm_line, dtype=str).T.to_csv(filesObj["MultiMarked"], quoting = QUOTE_NONNUMERIC,header=False,index=False
+            results_line = [filename,0]+['invalid image' for i in range(len(respArray))]
+            pd.DataFrame(results_line, dtype=str).T.to_csv(filesObj["Results"], quoting = QUOTE_NONNUMERIC,header=False,index=False)
+                        
         #print(filepath)
         os.remove(filepath)
     return filesObj["Results"]
