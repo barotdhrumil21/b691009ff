@@ -10,7 +10,7 @@ import glob
 import sys
 import string
 import random
-
+import pdfkit
 
 #imports from globals.py
 OMR_INPUT_DIR ='./functions/inputs/OMR_Files/'
@@ -177,7 +177,6 @@ def genQBlock(bubbleDims, QBlockDims, key, orig, qNos, gaps, vals, qType, orient
 def genGrid(bubbleDims, key, qType, orig, bigGaps, gaps, qNos, vals, orient='V', col_orient='V'):
     gridData = np.array(qNos)
     if(0 and len(gridData.shape)!=3 or gridData.size==0):
-        #print("Error(genGrid): Invalid qNos array given:", gridData.shape, gridData)
         exit(4)
         return []
 
@@ -238,21 +237,17 @@ def read_template(filename):
             return json.load(f)
         except Exception as e:
             print(e)
-            #print('\t',e)
             exit(5)
 
 templJSON={}
 TEMPLATE_FILE = "./functions/inputs"+"/template.json";
 if(os.path.exists(TEMPLATE_FILE)):
     templJSON = read_template(TEMPLATE_FILE)
-    #print("template does  exist")
 else:
     print("template json does not exist", os.listdir('.'))
     print(os.path.exists('./functions/inputs/'),"-",os.getcwd())
-    #pass
 
 if(len(templJSON.keys()) == 0):
-    #print("Error: No template files present at 'inputs/'")
     exit(6)
 
 TEMPLATES={}
@@ -266,35 +261,28 @@ for k, QBlocks in templJSON.items():
 
 #imports from utils.py
 
-#print('Checking Directories...')
 for _dir in [saveMarkedDir]:
     if(not os.path.exists(_dir)):
-        #print('Created : '+ _dir)
         os.makedirs(_dir)
-        #os.mkdir(_dir)
         os.mkdir(_dir+'/stack')
         os.mkdir(_dir+'/_MULTI_')
         os.mkdir(_dir+'/_MULTI_'+'/stack')
     else:
-        pass#print('Present : '+_dir)
+        pass
 
 for _dir in [manualDir,resultDir]:
     if(not os.path.exists(_dir)):
-            #print('Created : '+ _dir)
             os.makedirs(_dir)
     else:
-        pass#print('Present : '+_dir)
+        pass
 
 for _dir in [multiMarkedDir,errorsDir,badRollsDir]:
     if(not os.path.exists(_dir)):
-        #print('Created : '+ _dir)
         os.makedirs(_dir)
-        #os.mkdir(_dir)
     else:
-        pass#print('Present : '+_dir)
+        pass
 
 def saveImg(path, final_marked):
-    #print('Saving Image to '+path)
     cv2.imwrite(path,final_marked)
 
 def waitQ():
@@ -305,11 +293,9 @@ def waitQ():
 #not sure why following 2 functions are here!
 def resetSaveImg(key):
     global saveImgList
-    #print("resetSaveImg")
     saveImgList[key] = []
 
 def appendSaveImg(key,img):
-    #print("in appendSaveImg")
     if(saveimglvl >= int(key)):
         global saveImgList
         if(key not in saveImgList):
@@ -317,11 +303,9 @@ def appendSaveImg(key,img):
         saveImgList[key].append(img.copy())
 
 def normalize_util(img, alpha=0, beta=255):
-    #print("in normalize_util")
     return cv2.normalize(img, alpha, beta, norm_type=cv2.NORM_MINMAX)
 
 def resize_util(img, u_width, u_height=None):
-    #print("in resize_util")
     if u_height == None:
         h,w=img.shape[:2]
         u_height = int(h*u_width/w)
@@ -340,7 +324,6 @@ def show(name,orig,pause=1,resize=False,resetpos=None):
     else:
         global windowX, windowY, display_width
         if(type(orig) == type(None)):
-            #print(name," NoneType image to show!")
             if(pause):
                 cv2.destroyAllWindows()
             return
@@ -368,7 +351,6 @@ def show(name,orig,pause=1,resize=False,resetpos=None):
             windowX += w
 
         if(pause):
-            #print("Showing '"+name+"'\n\tPress Q on image to continue; Press Ctrl + C in terminal to exit")
             waitQ()
 
 def saveOrShowStacks(key, name, savedir=None,pause=1):
@@ -379,14 +361,13 @@ def saveOrShowStacks(key, name, savedir=None,pause=1):
         if (type(savedir) != type(None)):
             saveImg(savedir+'stack/'+name+'_'+str(key)+'_stack.jpg', result)
         else:
-            pass#print("else in saveOrShowStacks")# show(name+'_'+str(key),result,pause,0)
+            pass
 
 
 
 clahe = cv2.createCLAHE(clipLimit=5.0, tileGridSize=(8,8))
 
 def getROI(image, filename = None, noCropping=False, noMarkers=True):
-    #print("in getROI", image)
     global clahe, marker_eroded_sub
     for i in range(saveimglvl):
         resetSaveImg(i+1)
@@ -403,7 +384,6 @@ def getROI(image, filename = None, noCropping=False, noMarkers=True):
     if(noMarkers == True):
         return image_norm
     else:
-        #print("in getROI else!!!")
         image_eroded_sub = normalize_util(image_norm) if ERODE_SUB_OFF else normalize_util(image_norm - cv2.erode(image_norm, kernel=np.ones((5,5)),iterations=5))
         quads = {}
         h1, w1 = image_eroded_sub.shape[:2]
@@ -429,14 +409,11 @@ def getROI(image, filename = None, noCropping=False, noMarkers=True):
         h,w=templ.shape[:2]
         centres = []
         sumT, maxT = 0, 0
-        #print("Matching Marker:\t", end=" ")
         for k in range(0,4):
             res = cv2.matchTemplate(quads[k],templ,cv2.TM_CCOEFF_NORMED)
             maxT = res.max()
-            #print("Q"+str(k+1)+": maxT", round(maxT,3), end="\t")
             if(maxT < thresholdCircle or abs(allMaxT-maxT) >= thresholdVar):
                 # Warning - code will stop in the middle. Keep Threshold low to avoid.
-                #print(filename,"\nError: No circle found in Quad",k+1, "\n\tthresholdVar", thresholdVar, "maxT", maxT,"allMaxT",allMaxT, "Should you pass --noCropping flag?")
                 if(showimglvl>=1):
                     pass
                     #show("no_pts_"+filename,image_eroded_sub,0)
@@ -447,13 +424,11 @@ def getROI(image, filename = None, noCropping=False, noMarkers=True):
             pt = [pt[1],pt[0]]
             pt[0]+=origins[k][0]
             pt[1]+=origins[k][1]
-            # #print(">>",pt)
             image_norm = cv2.rectangle(image_norm,tuple(pt),(pt[0]+w,pt[1]+h),(150,150,150),2)
             # display:
             image_eroded_sub = cv2.rectangle(image_eroded_sub,tuple(pt),(pt[0]+w,pt[1]+h),(50,50,50) if ERODE_SUB_OFF else (155,155,155), 4)
             centres.append([pt[0]+w/2,pt[1]+h/2])
             sumT += maxT
-        #print("Scale",best_scale)
         # analysis data
         thresholdCircles.append(sumT/4)
 
@@ -647,7 +622,6 @@ def readResponse(image,name,savedir=None,autoAlign=False):
                         ret = morph_v.copy()
                         cv2.rectangle(ret,(s[0]+shift-THK,s[1]),(s[0]+shift+THK+d[0],s[1]+d[1]),CLR_WHITE,3)
                         appendSaveImg(6,ret)
-                    # #print(shift, L, R)
                     LW,RW= L > 100, R > 100
                     if(LW):
                         if(RW):
@@ -694,7 +668,6 @@ def readResponse(image,name,savedir=None,autoAlign=False):
         globalStdTHR, jstd_low, jstd_high = getGlobalThreshold(allQStdVals)#, "Q-wise Std-dev Plot", plotShow=True, sortInPlot=True)
         globalTHR, j_low, j_high = getGlobalThreshold(allQVals)#, "Mean Intensity Histogram", plotShow=True, sortInPlot=True)
 
-        #print("Thresholding:\t globalTHR: ",round(globalTHR,2),"\tglobalStdTHR: ",round(globalStdTHR,2),"\t(Looks like a Xeroxed OMR)" if(globalTHR == 255) else "")
 
         perOMRThresholdAvg, totalQStripNo, totalQBoxNo = 0, 0, 0
         for QBlock in TEMPLATE.QBlocks:
@@ -748,7 +721,6 @@ def readResponse(image,name,savedir=None,autoAlign=False):
                 totalQStripNo += 1
             # /for QBlock
         if(totalQStripNo==0):
-            #print("\n\t UNEXPECTED Template Incorrect Error: totalQStripNo is zero! QBlocks: ",TEMPLATE.QBlocks)
             exit(7)
         perOMRThresholdAvg /= totalQStripNo
         perOMRThresholdAvg = round(perOMRThresholdAvg,2)
@@ -796,36 +768,29 @@ def readResponse(image,name,savedir=None,autoAlign=False):
         for i in range(saveimglvl):
             saveOrShowStacks(i+1, name, savedir)
 
-        ##print("OMRresponse = ", OMRresponse, '\n', "final_marked = ", final_marked, '\n', "multimarked = ", multimarked, '\n', "multiroll = ", multiroll)
         return OMRresponse,final_marked,multimarked,multiroll
 
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        #print("Error from readResponse: ",e)
-        #print(exc_type, fname, exc_tb.tb_lineno)
+        
 
 #end imports from utils.py
 
 
 #imports from main.py
 def move(error_code, filepath,filepath2):
-    #print("Dummy Move:  "+filepath, " --> ",filepath2)
     global filesNotMoved
     filesNotMoved += 1
     return True
     # if(error_code!=NO_MARKER_ERR):
-    #     #print("Error Code: "+str(error_code))
 
     global filesMoved
     if(not os.path.exists(filepath)):
-        #print('File already moved')
         return False
     if(os.path.exists(filepath2)):
-        #print('ERROR : Duplicate file at '+filepath2)
         return False
 
-    #print("Moved:  "+filepath, " --> ",filepath2)
     os.rename(filepath,filepath2)
     filesMoved+=1
     return True
@@ -843,8 +808,7 @@ def processOMR( omrResp):
     return resp
 
 def report(Status,streak,scheme,qNo,marked,ans,prevmarks,currmarks,marks):
-    pass#print('%s \t %s \t\t %s \t %s \t %s \t %s \t %s ' % (qNo,Status,str(streak), '['+scheme+'] ',(str(prevmarks)+' + '+str(currmarks)+' ='+str(marks)),str(marked),str(ans)))
-
+    pass
 
 def evaluate(resp, answers, explain=False):
     global Sections 
@@ -852,7 +816,7 @@ def evaluate(resp, answers, explain=False):
     marks = 0
     #answers = Answers
     if(explain):
-        pass#print('Question\tStatus \t Streak\tSection \tMarks_Update\tMarked:\tAnswer:')
+        pass
     for scheme,section in Sections.items():
         sectionques = len(answers)
         prevcorrect=None
@@ -861,18 +825,11 @@ def evaluate(resp, answers, explain=False):
         for q in range(len(answers)):
             qnum = q+1
             qNo = 'q'+ str(qnum)
-            #print(answers)
             ans = answers[qNo]
-            #print("ans: ", ans)
             marked = resp.get(qNo, 'X')
-            ##print("true answer: ", ans, "marked: ", marked)
-            #firstQ = sectionques[0]
-            #lastQ = sectionques[len(sectionques)-1]
             unmarked = marked=='X' or marked==''
             bonus = 'BONUS' in ans
             correct = bonus or (marked in ans[0])
-            print(marked, '-', ans[0])
-            ##print("correct: ", correct)
             inrange=0
 
             """if(unmarked or int(q)==firstQ):
@@ -882,10 +839,8 @@ def evaluate(resp, answers, explain=False):
             else:
                 streak=0"""
 
-            #print(qNo)#answers[qNo], '\n', ans, len(ans))
             if True:
                 currmarks = ans[1] if correct else ans[2][-2:]
-                #print(qNo, currmarks)
 
             elif( 'allNone' in scheme):
                 allflag = allflag and correct
@@ -906,7 +861,7 @@ def evaluate(resp, answers, explain=False):
             elif('TechnoFin' in scheme):
                 currmarks = 0
             else:
-                pass#print('Invalid Sections')
+                pass
             prevmarks=marks
             marks += int(currmarks)
 
@@ -929,6 +884,63 @@ def evaluate(resp, answers, explain=False):
 
 #end imports from main.py
 
+# if you do not want pretty printing, just use pandas:
+# df.to_html(intermediate_html)
+
+#excel to pdf
+def xl2pdf(df, pdf,  title = 'Result'):
+    HTML_TEMPLATE1 = '''
+    <html>
+    <head>
+    <style>
+      h2 {
+        text-align: center;
+        font-family: Helvetica, Arial, sans-serif;
+      }
+      table { 
+        margin-left: auto;
+        margin-right: auto;
+      }
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 5px;
+        text-align: center;
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 90%;
+      }
+      table tbody tr:hover {
+        background-color: #dddddd;
+      }
+      .wide {
+        width: 90%; 
+      }
+    </style>
+    </head>
+    <body>
+    '''
+
+    HTML_TEMPLATE2 = '''
+    </body>
+    </html>
+    '''
+
+    ht = ''
+    if title != '':
+        ht += '<h2> %s </h2>\n' % title
+    ht += df.to_html(classes='wide', escape=False)
+    print(os.getcwd())
+    with open(r"./functions/media/output/htmlpdftemp/temp.html", 'w') as f:
+         f.write(HTML_TEMPLATE1 + ht + HTML_TEMPLATE2)
+
+    path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+    config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+
+    pdfkit.from_file(r"./functions/media/output/htmlpdftemp/temp.html", pdf, configuration=config)
+    
+
 #reading answer_key
 def extractAnswers(csvPath = None, imgPath = None):
     if imgPath is None:
@@ -939,7 +951,6 @@ def extractAnswers(csvPath = None, imgPath = None):
         answerdf['Question no'] = answerdf['Question no'].astype(int)
         answerdf = answerdf.set_index('Question no')
         answers = answerdf.to_dict('split')
-        #print(answers.keys)#, '\n\n', answerdf.columns)
 
         mainDict = {}
 
@@ -959,7 +970,6 @@ def extractAnswers(csvPath = None, imgPath = None):
         answers = answerdf.to_dict('split')
 
         imgPath = r"media/" + str(imgPath)
-        #print(os.getcwd())
         inOMR = cv2.imread(imgPath, cv2.IMREAD_GRAYSCALE)
         OMRcrop = getROI(inOMR, noCropping=args["noCropping"], noMarkers=args["noMarkers"])
         if(OMRcrop is None):
@@ -967,7 +977,7 @@ def extractAnswers(csvPath = None, imgPath = None):
         OMRresponseDict, final_marked, MultiMarked, multiroll = readResponse(OMRcrop,name = imgPath.split('/')[-1], autoAlign=args["autoAlign"])
         mainDict = {}
         for k, v in OMRresponseDict.items():
-            mainDict[k] = [v, answers['data'][int(k[1:])-1][1],answers['data'][int(k[1:])-1][2], answers['data'][int(k[1:])-1][3]] 
+            mainDict[k] = [v, str(answers['data'][int(k[1:])-1][1]),str(answers['data'][int(k[1:])-1][2]), str(answers['data'][int(k[1:])-1][3])] 
         return mainDict
 
 
@@ -977,7 +987,6 @@ args = {"noCropping":True, "noMarkers":True, "autoAlign":False, "setLayout":Fals
 
 def main(answers, imagePathListOrDirectory, directory=False):
     global args, filesNotMoved, filesMoved
-    #print("main answers", answers)
     #Answers = answers
     pa = r"/home/danniel/b691009ff/src/functions/inputs/OMR_Files/MobileCameraBased/JE"
     #make a list of paths of all the images to be graded
@@ -986,7 +995,6 @@ def main(answers, imagePathListOrDirectory, directory=False):
     else:
         allOMRs = imagePathListOrDirectory
 
-    #print("scanned all omrs: ", allOMRs)
 
 
     timeNowHrs=strftime("%I%p",localtime())
@@ -995,32 +1003,30 @@ def main(answers, imagePathListOrDirectory, directory=False):
     KEY_FN_SORTING = lambda x: int(x[1:]) if ord(x[1]) in range(48,58) else 0
     respCols = sorted( list(TEMPLATES.concats.keys()) + TEMPLATES.singles, key=KEY_FN_SORTING)
     emptyResp = ['']*len(respCols)
-    #print("respCols: ",respCols,'\n')
-    sheetCols = ['roll number','score']+respCols
+    sheetCols = ['Roll Number','Total Marks']
     filesObj = {}
 
-    #random string-------------------------------------------------------------------------------------------
 
-    #min_char = 8
-    #max_char = 12
-    #allchar = string.ascii_letters
     dis_string = ''.join(random.choices('0123456789abcdefghijklmnopqrstuvwxyz', k = 10))
 
     filesMap = {
-        "Results": resultDir+'Results_'+dis_string+'.csv',
-        "MultiMarked": manualDir+'MultiMarkedFiles_'+timeNowHrs+'.csv',
-        "Errors": manualDir+'ErrorFiles_'+timeNowHrs+'.csv',
-        "BadRollNos": manualDir+'BadRollNoFiles_'+timeNowHrs+'.csv'
+        "Results_csv": resultDir+'Results_'+dis_string+'.csv',
+        "MultiMarked_csv": manualDir+'MultiMarkedFiles_'+dis_string+'.csv',
+        "Errors_csv": manualDir+'ErrorFiles_'+dis_string+'.csv',
+        "BadRollNos_csv": manualDir+'BadRollNoFiles_'+dis_string+'.csv',
+
+        "Results_xlsx": resultDir+'Results_'+dis_string+'.xlsx',      
+        "MultiMarked_xlsx": manualDir+'MultiMarkedFiles_'+dis_string+'.xlsx',
+        "Errors_xlsx": manualDir+'ErrorFiles_'+dis_string+'.xlsx',
+        "BadRollNos_xlsx": manualDir+'BadRollNoFiles_'+dis_string+'.xlsx',
+
+        "Results_pdf": resultDir+'Results_'+dis_string+'.pdf',
+        "MultiMarked_pdf": manualDir+'MultiMarkedFiles_'+dis_string+'.pdf',
+        "Errors_pdf": manualDir+'ErrorFiles_'+dis_string+'.pdf',
+        "BadRollNos_pdf": manualDir+'BadRollNoFiles_'+dis_string+'.pdf',
     }
 
-    for fileKey,fileName in filesMap.items():
-        if(not os.path.exists(fileName)):
-            #print("Note: Created new file: %s" % (fileName))
-            filesObj[fileKey] = open(fileName,'a') # still append mode req [THINK!]
-            pd.DataFrame([sheetCols], dtype = str).to_csv(filesObj[fileKey], quoting = QUOTE_NONNUMERIC,header=False, index=False)
-        else:
-            #print('Present : appending to %s' % (fileName))
-            filesObj[fileKey] = open(fileName,'a')
+    masterDf = pd.DataFrame(columns = sheetCols, dtype = "object")
 
     squadlang="XXdummySquad"
     inputFolderName="dummyFolder"
@@ -1033,13 +1039,10 @@ def main(answers, imagePathListOrDirectory, directory=False):
         TEMPLATE = TEMPLATES
         ALL_WHITE = 255 * np.ones((TEMPLATE.dims[1],TEMPLATE.dims[0]), dtype='uint8')
         OMRresponseDict,final_marked,MultiMarked,multiroll = readResponse("H",ALL_WHITE,name = "ALL_WHITE", savedir = None, autoAlign=False)
-        #print("ALL_WHITE",OMRresponseDict)
         if(OMRresponseDict!={}):
-            #print("Preliminary Checks Failed.")
             exit(2)
         ALL_BLACK = np.zeros((TEMPLATE.dims[1],TEMPLATE.dims[0]), dtype='uint8')
         OMRresponseDict,final_marked,MultiMarked,multiroll = readResponse("H",ALL_BLACK,name = "ALL_BLACK", savedir = None, autoAlign=False)
-        #print("ALL_BLACK",OMRresponseDict)
         #show("Confirm : All bubbles are black",final_marked,1,1)
 
 
@@ -1050,18 +1053,16 @@ def main(answers, imagePathListOrDirectory, directory=False):
         filesCounter+=1
         filepath = filepath.replace(os.sep,'/')
 
-        #print("filepath: ", filepath)
         filename = re.search(r'.*/(.*)',filepath,re.IGNORECASE).groups()[0]
-        #print("file = ", filepath)
         inOMR = cv2.imread(filepath,cv2.IMREAD_GRAYSCALE)
         OMRcrop = getROI(inOMR,filename, noCropping=args["noCropping"], noMarkers=args["noMarkers"])
         if(OMRcrop is None):
-            #print("OMRcrop is none")
             newfilepath = errorsDir+filename
             OUTPUT_SET.append([filename]+emptyResp)
             if(move(NO_MARKER_ERR, filepath, newfilepath)):
                 err_line = [filename,"NA"]+emptyResp
-                pd.DataFrame(err_line, dtype=str).T.to_csv(filesObj["Errors"], quoting = QUOTE_NONNUMERIC,header=False,index=False)
+                pd.DataFrame(err_line, dtype=str).T.to_csv(filesObj["Errors_csv"], quoting = QUOTE_NONNUMERIC,header=False,index=False)
+                pd.DataFrame(err_line, dtype=str).T.to_excel(filesObj["Errors_xlsx"], quoting = QUOTE_NONNUMERIC,header=False,index=False)
             continue
 
         newfilename = inputFolderName + '_' + filename
@@ -1069,30 +1070,22 @@ def main(answers, imagePathListOrDirectory, directory=False):
         OMRresponseDict,final_marked,MultiMarked,multiroll = readResponse(OMRcrop,name = newfilename, savedir = savedir, autoAlign=args["autoAlign"])
 
         resp = processOMR(OMRresponseDict)
-        #print("omrdict: ", OMRresponseDict, '\n\n', "response: ", resp)
         score = evaluate(resp, answers, explain=explain)
         respArray=[]
         for k in respCols:
             respArray.append(resp[k])
 
         OUTPUT_SET.append([filename]+respArray)
-        
+
         if(MultiMarked == 0):
             filesNotMoved+=1;
             newfilepath = savedir+newfilename
-            results_line = [filename,score]+respArray
-            pd.DataFrame(results_line, dtype=str).T.to_csv(filesObj["Results"], quoting = QUOTE_NONNUMERIC,header=False,index=False)
-            #print("[%d] Graded with score: %.2f" % (filesCounter, score), '\t',newfilename)
-
+            results_line = [filename,score]
+            masterDf = masterDf.append(pd.DataFrame([results_line], columns = sheetCols), ignore_index = True)
         else:
-            #print('[%d] MultiMarked, moving File: %s' % (filesCounter, newfilename))
-            ##newfilepath = multiMarkedDir+squadlang+filename
-            ##if(move(MULTI_BUBBLE_WARN, filepath, newfilepath)):
-            ##    mm_line = [filename,"NA"]+respArray
-            ##    pd.DataFrame(mm_line, dtype=str).T.to_csv(filesObj["MultiMarked"], quoting = QUOTE_NONNUMERIC,header=False,index=False
             results_line = [filename,0]+['invalid image' for i in range(len(respArray))]
-            pd.DataFrame(results_line, dtype=str).T.to_csv(filesObj["Results"], quoting = QUOTE_NONNUMERIC,header=False,index=False)
-                        
-        #print(filepath)
-        os.remove(filepath)
-    return filesObj["Results"]
+            os.remove(filepath)
+    masterDf.to_csv(filesMap["Results_csv"], index = False)
+    masterDf.to_excel(filesMap["Results_xlsx"], index = False)
+    xl2pdf(masterDf, filesMap["Results_pdf"])
+    return filesMap["Results_xlsx"], filesMap["Results_pdf"], filesMap["Results_csv"]

@@ -154,7 +154,7 @@ class multiple_inputs(FormView):
             context['files']=os.listdir(r'./functions/inputs/OMR_Files/MobileCameraBased/JE')
         else:
             context['files'] = ''
-        context['files'] = context['files'].remove('gitkeep')
+        #context['files'] = context['files'].remove('gitkeep')
         # Add in a QuerySet of all the books
         obj = Exam.objects.filter(exam_name=self.kwargs['name'])
         Answers = extractAnswers(csvPath = obj[0].ansKey, imgPath = obj[0].ansKeyImg)
@@ -184,7 +184,7 @@ class eval(ListView):
             return Exam.objects.filter(user=self.request.user)
 
 #download csv file on make
-def download(request, path):
+"""def download(request, path):
     file_path = os.path.join(settings.MEDIA_ROOT, path)
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:
@@ -192,29 +192,34 @@ def download(request, path):
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
             return response
     raise Http404
-
+"""
 
 def ReportEval(request,*args,**kwargs):
     global Answers
-    results_dir =FileSystemStorage(location=r'./functions/outputs/Results')
+    results_dir =FileSystemStorage(location=r'.')
     media_result_dir = FileSystemStorage(location=r'./media/output')
 
     a=r"./functions/inputs/OMR_Files/MobileCameraBased/JE"
     #l = [a]
 
-    main(Answers, a, directory = True)
+    report_xl, report_pdf, report_csv = main(Answers, a, directory = True)
 
-    list_of_files = glob.glob(r"./functions/outputs/Results/*") # * means all if need specific format then *.csv
+    #list_of_files = glob.glob(r"./functions/outputs/Results/*") # * means all if need specific format then *.csv
     #print("lof: ", list_of_files)
-    latest_file = max(list_of_files, key=os.path.getctime)
-    latest_file = latest_file.replace(os.sep,'/')
-    report=latest_file.split('/')[-1]
-    to_be_copied = results_dir.open(report,mode='rb')
-    media_result_dir.save(report,to_be_copied)
+    #latest_file = max(list_of_files, key=os.path.getctime)
+    #latest_file = latest_file.replace(os.sep,'/')
+    #report=latest_file.split('/')[-1]
+    to_be_copied = results_dir.open(report_xl,mode='rb')
+    media_result_dir.save(report_xl,to_be_copied)
+    to_be_copied = results_dir.open(report_pdf,mode='rb')
+    media_result_dir.save(report_pdf,to_be_copied)
+    to_be_copied = results_dir.open(report_csv,mode='rb')
+    media_result_dir.save(report_csv,to_be_copied)
 
     context ={
-    'result': report
-
+    'result_xl': report_xl,
+    'result_pdf': report_pdf,
+    'result_csv': report_csv
     }
     #print(context['result'])
     return render(request,'eval_report.html',context)
