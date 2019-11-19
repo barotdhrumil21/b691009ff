@@ -31,9 +31,9 @@ class exam_builder(forms.ModelForm):
                                                      'aria-describedby':"basic-addon2"})
 
         self.fields['ansKey'].widget.attrs.update({'class':"custom-file-input",
-                                                    'id':"inputGroupFile04"})
+                                                    'id':"file-upload"})
         self.fields['ansKeyImg'].widget.attrs.update({'class':"custom-file-input",
-                                                    'id':"inputGroupFile004"})
+                                                    'id':"file-upload2"})
 
         self.fields['template'].widget.attrs.update({'class':"custom-select",
                                                      'id':"inputGroupSelect02"})
