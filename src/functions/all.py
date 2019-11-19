@@ -935,15 +935,14 @@ def xl2pdf(df, pdf,  title = 'Result'):
     with open(r"./functions/media/output/htmlpdftemp/temp.html", 'w') as f:
          f.write(HTML_TEMPLATE1 + ht + HTML_TEMPLATE2)
 
-    path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
-    config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+    #path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+    #config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
 
-    pdfkit.from_file(r"./functions/media/output/htmlpdftemp/temp.html", pdf, configuration=config)
+    pdfkit.from_file(r"./functions/media/output/htmlpdftemp/temp.html", pdf)#, configuration=config)
     
 
 #reading answer_key
 def extractAnswers(csvPath = None, imgPath = None):
-    print(csvPath, imgPath)
     if csvPath is not None:
         answerdf = pd.read_csv(csvPath)
         for i in range(len(answerdf)):
