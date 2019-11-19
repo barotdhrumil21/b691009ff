@@ -840,7 +840,7 @@ def evaluate(resp, answers, explain=False):
                 streak=0"""
 
             if True:
-                currmarks = ans[1] if correct else ans[2][-2:]
+                currmarks = ans[1] if correct else ans[2]
 
             elif( 'allNone' in scheme):
                 allflag = allflag and correct
@@ -943,17 +943,15 @@ def xl2pdf(df, pdf,  title = 'Result'):
 
 #reading answer_key
 def extractAnswers(csvPath = None, imgPath = None):
-    if imgPath is None:
+    print(csvPath, imgPath)
+    if csvPath is not None:
         answerdf = pd.read_csv(csvPath)
-        answerdf = answerdf.drop(['Remove'], axis = 1)
         for i in range(len(answerdf)):
-            answerdf['Question no'].iloc[i] = int(i + 1)
-        answerdf['Question no'] = answerdf['Question no'].astype(int)
-        answerdf = answerdf.set_index('Question no')
+            answerdf['Question_no'].iloc[i] = int(i + 1)
+        answerdf['Question_no'] = answerdf['Question_no'].astype(int)
+        answerdf = answerdf.set_index('Question_no')
         answers = answerdf.to_dict('split')
-
         mainDict = {}
-
         index = 0
         for i in range(len(answers['index'])):
             mainDict['q{}'.format(i+1)] = answers['data'][i]
@@ -962,11 +960,10 @@ def extractAnswers(csvPath = None, imgPath = None):
         return mainDict
     else:
         answerdf = pd.read_csv(csvPath)
-        answerdf = answerdf.drop(['Remove'], axis = 1)
         for i in range(len(answerdf)):
-            answerdf['Question no'].iloc[i] = int(i + 1)
-        answerdf['Question no'] = answerdf['Question no'].astype(int)
-        answerdf = answerdf.set_index('Question no')
+            answerdf['Question_no'].iloc[i] = int(i + 1)
+        answerdf['Question_no'] = answerdf['Question_no'].astype(int)
+        answerdf = answerdf.set_index('Question_no')
         answers = answerdf.to_dict('split')
 
         imgPath = r"media/" + str(imgPath)

@@ -2,10 +2,9 @@
 {% load static %}
 
 {% block link %}
-<link href="https://unpkg.com/tabulator-tables@4.4.3/dist/css/tabulator.min.css" rel="stylesheet">
-<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.4.3/dist/js/tabulator.min.js"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">  
+<link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="{% static 'css/table.css' %}">
@@ -64,35 +63,51 @@
                       <div class="row">
                         <div class="col-sm" style="text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
                           <p style="margin-top:15px">Enter Marks For Correct Answer</p>
-                          <div class="col input-group" >Correct Marks &nbsp<input style="width:39vh; border: 3px solid gray; border-radius:6px" type="number" name="default marks" id="cmarks"></div>
+                          <div class="col input-group" >Correct Marks &nbsp<input style="width:39vh; border: 3px solid gray; border-radius:6px" type="number" name="default marks" id="def-cmarks"></div>
                           </div>
                         <div class="col-sm" style="margin-left:5px; text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
                           <p style="margin-top:15px">Enter Marks For Wrong Answer</p>
-                          <div class="col input-group">Wrong Marks &nbsp<input style="width:40vh; border: 3px solid gray; border-radius:6px" type="number" name="wrong marks" id="wmarks"></div>
+                          <div class="col input-group">Wrong Marks &nbsp<input style="width:40vh; border: 3px solid gray; border-radius:6px" type="number" name="wrong marks" id="def-wmarks"></div>
                           </div>
                       </div>
                       <div class="row" style="margin-top:5px">
                         <div class="col-sm" style="text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
                           <p style="margin-top:15px">Enter Name Of One Subject, You Can Add Many Subjects One By One</p>
-                            <div class="col"><input style="width:60vh; border: 3px solid gray; border-radius:6px" type="text" name="subject" id="subject"></div>
+                            <div class="col"><input style="width:60vh; border: 3px solid gray; border-radius:6px" type="text" name="subject" id="def-sub"></div>
                         </div>
                           <div class="col-sm" style="margin-left:5px; text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
                             <p style="margin-top:15px">Enter Number Of Rows For This Subject, You Can Add Many Rows For Different Subjects</p>
 
-                            <div class="col"><input style="width:60vh; border: 3px solid gray; border-radius:6px" type="number" name="n of rows" id="rownos"></div>
+                            <div class="col"><input style="width:60vh; border: 3px solid gray; border-radius:6px" type="number" name="n of rows" id="inputno"></div>
                           </div>
 
                       </div>
                       <div class="col-sm btn" style="margin-top:10px"><span class="table-add1 float-right mb-3 mr-2">
-                        <a href="#!" id="multiple-add"><i  style="padding-left:40vh; padding-right:40vh; display:block; width:130vh; height:10vh; background-color:#275091;
+                        <a href="#!"><i  style="padding-left:40vh; padding-right:40vh; display:block; width:130vh; height:10vh; background-color:#275091;
                         color:white; border: 3px solid gray; border-radius:50px; font-size:30px; padding-top:10px; color:white;"
                           class="fad fa-plus fa-2x" aria-hidden="true" aria-expanded="true"
                           >ADD Rows With Filled Details</i></a></span></div>
                   </div>
+        <div id="table" class="table-editable">
+          <!-- <span class="table-add float-right mb-3 mr-2"><a href="#!" class="text-success"><i
 
-                   <button type="button" id="download">Download csv </button>
-                   <button type="button" id="empty">Clear table </button>
-                  <div id="example-table"></div>
+              class="fad fa-plus fa-2x" aria-hidden="true">ADD</i></a></span> -->          <button type="button" class="btn btn-light" style="margin-left:40vh;margin-bottom:10px; content-align:center; display:inline; border: 3px solid gray; border-radius:50px; padding:15px;font-size:18px; background-color:#275091; color:white" id="export">Click To Export Answer Key Once Full Table Is Complete</button>
+          <table class="css-serial table-dark table table-bordered table-responsive-md table-striped text-center">
+            <thead>
+              <tr>
+                <th class="text-center">Question no</th>
+                <th class="text-center">Ans</th>
+                <th class="text-center">correct marks</th>
+                <th class="text-center">wrong marks</th>
+                <th class="text-center">subject</th>
+                <th class="text-center">Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+        </div>
 
       </div>
 
@@ -129,10 +144,19 @@
 {% endblock content %}
 
 {% block script %}
-
+<script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+<script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF/jspdf.min.js"></script>
+<script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
-<script  src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="crossorigin="anonymous"></script>
-<script src =  "{% static 'js/tableNEW.js' %}"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+<!-- Latest compiled and minified Locales -->
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/extensions/export/bootstrap-table-export.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/extensions/editable/bootstrap-table-editable.min.js"></script>
+<script src = "{% static 'js/csvExport.js' %} " ></script>
+<script src =  "{% static 'js/tableOLD.js' %}"></script>
 <script src =  "{% static 'js/fileName.js' %}"></script>
 
 
