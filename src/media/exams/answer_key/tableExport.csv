@@ -1,12 +1,31 @@
-﻿,"Item ID","Item Detail",,
-,,"Item Name","Item Price","Item Operate"
-,0,"Item 0",$0,
-,1,"Item 1",$1,
-,2,"Item 2",$2,
-,3,"Item 3",$3,
-,4,"Item 4",$4,
-,5,"Item 5",$5,
-,6,"Item 6",$6,
-,7,"Item 7",$7,
-,8,"Item 8",$8,
-,9,"Item 9",$9,
+﻿"Question no",PossibleAns,Ans,"correct marks","wrong marks",subject,Remove
+,4,A,1,0,math,Remove
+,4,B,1,0,math,Remove
+,4,A,1,0,math,Remove
+,4,D,1,0,math,Remove
+,4,A,1,0,math,Remove
+,4,B,1,0,math,Remove
+,4,C,1,0,math,Remove
+,4,C,1,0,math,Remove
+,4,A,1,0,math,Remove
+,4,A,1,0,math,Remove
+,4,B,2,'-1,chemistry,Remove
+,4,B,2,'-1,chemistry,Remove
+,4,A,2,'-1,chemistry,Remove
+,4,D,2,'-1,chemistry,Remove
+,4,A,2,'-1,chemistry,Remove
+,4,C,2,'-1,chemistry,Remove
+,4,C,2,'-1,chemistry,Remove
+,4,B,2,'-1,chemistry,Remove
+,4,A,2,'-1,chemistry,Remove
+,4,A,2,'-1,chemistry,Remove
+,4,C,1,'-1,physics,Remove
+,4,C,1,'-1,physics,Remove
+,4,C,1,'-1,physics,Remove
+,4,A,1,'-1,physics,Remove
+,4,B,1,'-1,physics,Remove
+,4,B,1,'-1,physics,Remove
+,4,A,1,'-1,physics,Remove
+,4,B,1,'-1,physics,Remove
+,4,A,1,'-1,physics,Remove
+,4,A,1,'-1,physics,Remove

@@ -386,7 +386,7 @@ def saveOrShowStacks(key, name, savedir=None,pause=1):
 
 clahe = cv2.createCLAHE(clipLimit=5.0, tileGridSize=(8,8))
 
-def getROI(image, filename, noCropping=False, noMarkers=True):
+def getROI(image, filename = None, noCropping=False, noMarkers=True):
     #print("in getROI", image)
     global clahe, marker_eroded_sub
     for i in range(saveimglvl):
@@ -847,39 +847,46 @@ def report(Status,streak,scheme,qNo,marked,ans,prevmarks,currmarks,marks):
     pass#print('%s \t %s \t\t %s \t %s \t %s \t %s \t %s ' % (qNo,Status,str(streak), '['+scheme+'] ',(str(prevmarks)+' + '+str(currmarks)+' ='+str(marks)),str(marked),str(ans)))
 
 
-def evaluate(resp,explain=False):
-    global Answers,Sections
+def evaluate(resp, answers, explain=False):
+    global Sections 
+
     marks = 0
-    answers = Answers
+    #answers = Answers
     if(explain):
         pass#print('Question\tStatus \t Streak\tSection \tMarks_Update\tMarked:\tAnswer:')
     for scheme,section in Sections.items():
-        sectionques = section['ques']
+        sectionques = len(answers)
         prevcorrect=None
         allflag=1
         streak=0
-        for q in sectionques:
-            qNo = 'q'+str(q)
+        for q in range(len(answers)):
+            qnum = q+1
+            qNo = 'q'+ str(qnum)
+            #print(answers)
             ans = answers[qNo]
+            #print("ans: ", ans)
             marked = resp.get(qNo, 'X')
             ##print("true answer: ", ans, "marked: ", marked)
-            firstQ = sectionques[0]
-            lastQ = sectionques[len(sectionques)-1]
+            #firstQ = sectionques[0]
+            #lastQ = sectionques[len(sectionques)-1]
             unmarked = marked=='X' or marked==''
             bonus = 'BONUS' in ans
-            correct = bonus or (marked in ans)
+            correct = bonus or (marked in ans[0])
+            print(marked, '-', ans[0])
             ##print("correct: ", correct)
             inrange=0
 
-            if(unmarked or int(q)==firstQ):
+            """if(unmarked or int(q)==firstQ):
                 streak=0
             elif(prevcorrect == correct):
                 streak+=1
             else:
-                streak=0
+                streak=0"""
 
-            if 'Custom' in scheme:
-                currmarks = section['marks'] if correct else 0
+            #print(qNo)#answers[qNo], '\n', ans, len(ans))
+            if True:
+                currmarks = ans[1] if correct else ans[2][-2:]
+                #print(qNo, currmarks)
 
             elif( 'allNone' in scheme):
                 allflag = allflag and correct
@@ -902,7 +909,7 @@ def evaluate(resp,explain=False):
             else:
                 pass#print('Invalid Sections')
             prevmarks=marks
-            marks += currmarks
+            marks += int(currmarks)
 
             if(explain):
                 if bonus:
@@ -923,11 +930,49 @@ def evaluate(resp,explain=False):
 
 #end imports from main.py
 
+#reading answer_key
+def extractAnswers(csvPath = None, imgPath = None):
+    if imgPath is None:
+        answerdf = pd.read_csv(csvPath)
+        answerdf = answerdf.drop(['PossibleAns', 'Remove'], axis = 1)
+        for i in range(len(answerdf)):
+            answerdf['Question no'].iloc[i] = int(i + 1)
+        answerdf['Question no'] = answerdf['Question no'].astype(int)
+        answerdf = answerdf.set_index('Question no')
+        answers = answerdf.to_dict('split')
+        #print(answers.keys)#, '\n\n', answerdf.columns)
+
+        mainDict = {}
+
+        index = 0
+        for i in range(len(answers['index'])):
+            mainDict['q{}'.format(i+1)] = answers['data'][i]
+            index += 1
+
+        return mainDict
+    else:
+        imgPath = r"media/" + str(imgPath)
+        #print(os.getcwd())
+        inOMR = cv2.imread(imgPath, cv2.IMREAD_GRAYSCALE)
+        OMRcrop = getROI(inOMR, noCropping=args["noCropping"], noMarkers=args["noMarkers"])
+        if(OMRcrop is None):
+            return "wrong file"
+        OMRresponseDict, final_marked, MultiMarked, multiroll = readResponse(OMRcrop,name = imgPath.split('/')[-1], autoAlign=args["autoAlign"])
+        mainDict = {}
+        for k, v in OMRresponseDict.items():
+            mainDict[k] = [v, 1, 0, 'None']
+        #print(imgPath, '\n\n', OMRresponseDict)
+        return mainDict
+
+
+
 #main function called by external application
 args = {"noCropping":True, "noMarkers":True, "autoAlign":False, "setLayout":False}
 
-def main(imagePathListOrDirectory, directory=False):
+def main(answers, imagePathListOrDirectory, directory=False):
     global args, filesNotMoved, filesMoved
+    #print("main answers", answers)
+    #Answers = answers
     pa = r"/home/danniel/b691009ff/src/functions/inputs/OMR_Files/MobileCameraBased/JE"
     #make a list of paths of all the images to be graded
     if directory:
@@ -992,6 +1037,7 @@ def main(imagePathListOrDirectory, directory=False):
         #show("Confirm : All bubbles are black",final_marked,1,1)
 
 
+
     for filepath in allOMRs:
         if 'gitkeep' in filepath:
             continue
@@ -1017,8 +1063,8 @@ def main(imagePathListOrDirectory, directory=False):
         OMRresponseDict,final_marked,MultiMarked,multiroll = readResponse(OMRcrop,name = newfilename, savedir = savedir, autoAlign=args["autoAlign"])
 
         resp = processOMR(OMRresponseDict)
-
-        score = evaluate(resp, explain=explain)
+        #print("omrdict: ", OMRresponseDict, '\n\n', "response: ", resp)
+        score = evaluate(resp, answers, explain=explain)
         respArray=[]
         for k in respCols:
             respArray.append(resp[k])

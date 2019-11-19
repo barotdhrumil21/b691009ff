@@ -25,7 +25,6 @@ $('.table-add1').on('click', 'i', () => {
 		const newTr = `
 		<tr class="hide">
 			<td class="pt-3-half" contenteditable="true"></td>
-			<td class="pt-3-half" contenteditable="true">4</td>
 			<td class="pt-3-half" contenteditable="true">A</td>
 			<td class="pt-3-half" contenteditable="true">${defcmarks}</td>
 			<td class="pt-3-half" contenteditable="true">${defwmarks}</td>
@@ -82,7 +81,6 @@ for (var i = 0; i < rowno; i++) {
 		const newTr = `
 		<tr class="hide">
 			<td class="pt-3-half" contenteditable="true"></td>
-			<td class="pt-3-half" contenteditable="true">4</td>
 			<td class="pt-3-half" contenteditable="true">A</td>
 			<td class="pt-3-half" contenteditable="true">${defcmarks}</td>
 			<td class="pt-3-half" contenteditable="true">${defwmarks}</td>

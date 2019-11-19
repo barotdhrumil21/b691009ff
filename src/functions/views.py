@@ -35,6 +35,8 @@ from django.conf import settings
 #    }
 #    return render(request,'templateAdder.html',context)
 
+#global variable for answer key
+Answers = {}
 
 #"/functions/add-pdf"
 
@@ -54,7 +56,7 @@ def pdf_view(request,name,*args,**kwargs):
     'obj':obj,
     'id':obj.id
     }
-    print(obj.id)
+    #print(obj.id)
     return render(request,'preview.html',context)
 
 #"/functions/all-templates"
@@ -136,26 +138,30 @@ class multiple_inputs(FormView):
         else:
             return self.form_invalid(form)
 
+
     def request_page(request):
         print(request.GET)
 
     def get_context_data(self,*args,**kwargs):
+        global Answers
         context = super().get_context_data(**kwargs)
         fs =FileSystemStorage(location=r'./functions/inputs/OMR_Files/MobileCameraBased/JE')
         #print(fs.listdir(path=r'./functions/inputs/OMR_Files/MobileCameraBased/JE'))
         #print("path: ", os.listdir(r'./functions/inputs/OMR_Files/MobileCameraBased/JE'))
+
+        uploadedFile = "./media/exams/answer_key/tableExport.csv"
         if len(os.listdir(r'./functions/inputs/OMR_Files/MobileCameraBased/JE'))>0:
             context['files']=os.listdir(r'./functions/inputs/OMR_Files/MobileCameraBased/JE')
-
         else:
             context['files'] = ''
         context['files'] = context['files'].remove('gitkeep')
         # Add in a QuerySet of all the books
         obj = Exam.objects.filter(exam_name=self.kwargs['name'])
-        #print(obj.first)
+        Answers = extractAnswers(csvPath = obj[0].ansKey, imgPath = obj[0].ansKeyImg)
+
         context['Tester'] = "dsf"
         context['object'] = obj
-        #print(context['files'])
+        #print(obj[0].ansKey)
         return context
 
 def delete_img(request,*args,**kwargs):
@@ -189,25 +195,26 @@ def download(request, path):
 
 
 def ReportEval(request,*args,**kwargs):
-        results_dir =FileSystemStorage(location=r'./functions/outputs/Results')
-        media_result_dir = FileSystemStorage(location=r'./media/output')
+    global Answers
+    results_dir =FileSystemStorage(location=r'./functions/outputs/Results')
+    media_result_dir = FileSystemStorage(location=r'./media/output')
 
-        a=r"./functions/inputs/OMR_Files/MobileCameraBased/JE"
-        #l = [a]
+    a=r"./functions/inputs/OMR_Files/MobileCameraBased/JE"
+    #l = [a]
 
-        main(a, directory = True)
+    main(Answers, a, directory = True)
 
-        list_of_files = glob.glob(r"./functions/outputs/Results/*") # * means all if need specific format then *.csv
-        #print("lof: ", list_of_files)
-        latest_file = max(list_of_files, key=os.path.getctime)
-        latest_file = latest_file.replace(os.sep,'/')
-        report=latest_file.split('/')[-1]
-        to_be_copied = results_dir.open(report,mode='rb')
-        media_result_dir.save(report,to_be_copied)
+    list_of_files = glob.glob(r"./functions/outputs/Results/*") # * means all if need specific format then *.csv
+    #print("lof: ", list_of_files)
+    latest_file = max(list_of_files, key=os.path.getctime)
+    latest_file = latest_file.replace(os.sep,'/')
+    report=latest_file.split('/')[-1]
+    to_be_copied = results_dir.open(report,mode='rb')
+    media_result_dir.save(report,to_be_copied)
 
-        context ={
-        'result': report
+    context ={
+    'result': report
 
-        }
-        print(context['result'])
-        return render(request,'eval_report.html',context)
+    }
+    #print(context['result'])
+    return render(request,'eval_report.html',context)
