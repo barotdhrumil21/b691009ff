@@ -943,7 +943,7 @@ def xl2pdf(df, pdf,  title = 'Result'):
 
 #reading answer_key
 def extractAnswers(csvPath = None, imgPath = None):
-    if csvPath is not None:
+    if imgPath == "default.jpg":
         answerdf = pd.read_csv(csvPath)
         for i in range(len(answerdf)):
             answerdf['Question_no'].iloc[i] = int(i + 1)

@@ -20,7 +20,7 @@ class Exam(models.Model):
         user = models.ForeignKey(User,on_delete=models.CASCADE)
         exam_name = models.CharField(max_length = 200)
         ansKey = models.FileField(null=True,blank=True,upload_to='exams/answer_key/' )
-        ansKeyImg = models.FileField(null=True,blank=True,upload_to='exams/answer_key_img/' )
+        ansKeyImg = models.FileField(default="default.jpg", null=True,blank=True,upload_to='exams/answer_key_img/' )
         template = models.ForeignKey(omr_templates,on_delete=models.PROTECT)
 
 

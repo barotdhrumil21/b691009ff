@@ -157,6 +157,7 @@ class multiple_inputs(FormView):
         #context['files'] = context['files'].remove('gitkeep')
         # Add in a QuerySet of all the books
         obj = Exam.objects.filter(exam_name=self.kwargs['name'])
+        print("TYPE---->",obj[0].ansKeyImg)
         Answers = extractAnswers(csvPath = obj[0].ansKey, imgPath = obj[0].ansKeyImg)
 
         context['Tester'] = "dsf"
@@ -200,10 +201,10 @@ def ReportEval(request,*args,**kwargs):
     media_result_dir.save(report_pdf,to_be_copied)
     to_be_copied = results_dir.open(report_csv,mode='rb')
     media_result_dir.save(report_csv,to_be_copied)
-
+    print(report_pdf[1::])
     context ={
     'result_xl': report_xl,
-    'result_pdf': report_pdf,
+    'result_pdf': report_pdf[1::],
     'result_csv': report_csv
     }
     #print(context['result'])
