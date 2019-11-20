@@ -1,16 +1,20 @@
 import os
 import glob
 from django.http import HttpResponse, Http404
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render,redirect,get_object_or_404
 #from django.core.urlresolvers import reverse
 from django.views.generic import(
                                     CreateView,
                                     ListView,
                                     DetailView,
+                                    UpdateView,
+                                    DeleteView,
                                     FormView)
 from django.core.files.storage import FileSystemStorage
 from .forms import (upload_form,
                     exam_builder,
+                    exam_editor,
                     multiple_files_input)
 from .models import (
                     omr_templates,
@@ -84,7 +88,7 @@ class upload_exam_view(CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
-#"/functions/exam-detail/<EXAM_NAME>/inputs"
+#"/functions/exams"
 class all_exams(ListView):
     model = Exam
     template_name = 'exam.html'
@@ -106,11 +110,35 @@ class exam_detail_view(DetailView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
         oprating_object = self.get_object()
         #print(oprating_object.first().ansKey)
         context['Tester'] = "TESTER STRING"
         return context
+
+#"/functions/exam-detail/<EXAM_NAME>/update"
+class exam_update_view(LoginRequiredMixin, UserPassesTestMixin,UpdateView):
+    model = Exam
+    form_class = exam_editor
+    template_name = 'examUpdate.html'
+
+    #only user who created can update
+    def test_func(self):
+        exam = self.get_object()
+        if self.request.user == exam.user:
+            return True
+        return False
+
+class exam_delete_view(LoginRequiredMixin, UserPassesTestMixin,DeleteView):
+    model = Exam
+    template_name = 'examDelete.html'
+    success_url = '/functions/exams'
+
+    #only user who created can delete
+    def test_func(self):
+        exam = self.get_object()
+        if self.request.user == exam.user:
+            return True
+        return False
 
 #"/functions/exam-detail/<EXAM_NAME>/inputs"
 class multiple_inputs(FormView):

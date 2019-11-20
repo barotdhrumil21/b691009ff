@@ -23,12 +23,14 @@
 <a href={% url 'all-exams' %} ><h3 class="homeNav"><button type="button" class="btn btn-light">back</button></h3></a>
 
 <div class="template-list">
+  <h2>Answer Key:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp   {{object.first.id}}</h2>
 <h1>Exam Name:&nbsp&nbsp&nbsp&nbsp&nbsp {{object.first.exam_name}}</h1>
 <h2>Answer Key:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp   {{object.first.ansKey}}</h2>
 <h3>Template Name: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  {{object.first.template.pdf_name}}</h3>
 <h3>Template:  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{object.first.template.pdf}}</h3>
 
-
+<a href="{% url 'exam-update' object.first.id%}"><button  name="button">E D I T</button></a>
+<a href="{% url 'exam-delete' object.first.id%}"><button  name="button">D E L E T E</button></a>
 <p>{{Tester}}</p>
 
 </div>

@@ -47,6 +47,17 @@ class exam_builder(forms.ModelForm):
         'template'
         ]
 
+class exam_editor(forms.ModelForm):
+
+    class Meta:
+        model = Exam
+        fields =[
+        'exam_name',
+        'ansKey',
+        'ansKeyImg',
+        'template'
+        ]
+
 
 class multiple_files_input(forms.Form):
     inputs = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <form  method="POST" enctype="multipart/form-data">{% csrf_token %}
+      {{form.exam_name}}<br>
+      {{form.ansKey}}<br>
+      {{form.ansKeyImg}}<br>
+      {{form.template}}<br>
+
+      <input type="submit" value ="update">U P D A T E</input>
+    </form>
+
+  </body>
+</html>
