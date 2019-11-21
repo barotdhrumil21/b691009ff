@@ -977,6 +977,13 @@ def extractAnswers(csvPath = None, imgPath = None):
         return mainDict
 
 
+def getRanks(df):
+    df.sort_values('Total Marks', axis=0, ascending=True, kind='quicksort', na_position='last')
+    df['Rank'] = df['Total Marks'].rank(ascending = False, method = 'min').astype(int)
+    print(type(df['Total Marks'].rank(ascending = False, method = 'min')))
+    return df 
+
+
 
 #main function called by external application
 args = {"noCropping":True, "noMarkers":True, "autoAlign":False, "setLayout":False}
@@ -1072,6 +1079,8 @@ def main(answers, imagePathListOrDirectory, directory=False):
             respArray.append(resp[k])
 
         OUTPUT_SET.append([filename]+respArray)
+        os.remove(filepath)
+
 
         if(MultiMarked == 0):
             filesNotMoved+=1;
@@ -1080,7 +1089,8 @@ def main(answers, imagePathListOrDirectory, directory=False):
             masterDf = masterDf.append(pd.DataFrame([results_line], columns = sheetCols), ignore_index = True)
         else:
             results_line = [filename,0]+['invalid image' for i in range(len(respArray))]
-            os.remove(filepath)
+
+    masterDf = getRanks(masterDf)
     masterDf.to_csv(filesMap["Results_csv"], index = False)
     masterDf.to_excel(filesMap["Results_xlsx"], index = False)
     xl2pdf(masterDf, filesMap["Results_pdf"])
