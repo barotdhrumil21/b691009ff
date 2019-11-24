@@ -930,8 +930,26 @@ def xl2pdf(df, pdf,  title = 'Result'):
     ht = ''
     if title != '':
         ht += '<h2> %s </h2>\n' % title
+
+    #heighest_marks = df['Total Marks'].max()
+    #avg_marks = str(df['Total Marks'].mean())[:5]
+
+    ht += '<h4>Heighest Marks: %s </h4>' % df['Total Marks'].max() 
+    ht += '<h4>Average Marks: %s </h4>' % str(df['Total Marks'].mean())[:5]
+    ht += '<h4>Total Students: %s </h4>' % len(df)
+
     ht += df.to_html(classes='wide', escape=False)
     print(os.getcwd())
+
+    try:
+        os.remove(r"./functions/media/output/htmlpdftemp/temp.txt")
+        os.remove(r"./functions/media/output/htmlpdftemp/temp.html")
+    except:
+        pass
+
+    with open(r"./functions/media/output/htmlpdftemp/temp.txt", 'w') as f:
+         f.write('<div class="results">' + ht + '</div>')
+
     with open(r"./functions/media/output/htmlpdftemp/temp.html", 'w') as f:
          f.write(HTML_TEMPLATE1 + ht + HTML_TEMPLATE2)
 
@@ -939,7 +957,19 @@ def xl2pdf(df, pdf,  title = 'Result'):
     #config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
 
     pdfkit.from_file(r"./functions/media/output/htmlpdftemp/temp.html", pdf)#, configuration=config)
-    
+
+
+def fromImage(imgPath):
+    imgPath = r"media/" + str(imgPath)
+    inOMR = cv2.imread(imgPath, cv2.IMREAD_GRAYSCALE)
+    OMRcrop = getROI(inOMR, noCropping=args["noCropping"], noMarkers=args["noMarkers"])
+    if(OMRcrop is None):
+        return "wrong file"
+    OMRresponseDict, final_marked, MultiMarked, multiroll = readResponse(OMRcrop,name = imgPath.split('/')[-1], autoAlign=args["autoAlign"])
+    for key, vals in OMRresponseDict.items():
+        if len(vals) > 1:
+            return "Bad Image"
+    return OMRresponseDict
 
 #reading answer_key
 def extractAnswers(csvPath = None, imgPath = None):

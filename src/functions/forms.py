@@ -21,6 +21,10 @@ class upload_form(forms.ModelForm):
         'pdf'
         ]
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class exam_builder(forms.ModelForm):
 
     def __init__(self,*args,**kwargs):
@@ -38,14 +42,20 @@ class exam_builder(forms.ModelForm):
         self.fields['template'].widget.attrs.update({'class':"custom-select",
                                                      'id':"inputGroupSelect02"})
 
+        self.fields['date'].widget = DateInput()
+
     class Meta:
         model = Exam
         fields =[
         'exam_name',
         'ansKey',
         'ansKeyImg',
-        'template'
+        'template',
+        'date'
         ]
+        #widgets = {
+        #    'date': DateInput()
+        #}
 
 class exam_editor(forms.ModelForm):
 

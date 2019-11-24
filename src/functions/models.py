@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils import timezone
 # Create your models here.
 
 class omr_templates(models.Model):
@@ -22,7 +23,7 @@ class Exam(models.Model):
         ansKey = models.FileField(null=False,blank=False,upload_to='exams/answer_key/' )
         ansKeyImg = models.FileField(default="default.jpg", null=True,blank=True,upload_to='exams/answer_key_img/' )
         template = models.ForeignKey(omr_templates,on_delete=models.PROTECT)
-
+        date = models.DateTimeField(default = timezone.now)
 
         def __str__(self):
             return self.exam_name

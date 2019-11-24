@@ -152,12 +152,12 @@ class multiple_inputs(FormView):
         form = self.get_form(form_class)
         files = request.FILES.getlist('inputs')
         #context = super().get_context_data(**kwargs)
-        files_list =[]
+        files_list = []
         if form.is_valid():
             fs=FileSystemStorage(location=r'./functions/inputs/OMR_Files/MobileCameraBased/JE')
             for f in files:
                 # Do something with each file.
-                f_name=f.name
+                f_name = f.name
                 f_extension = f.content_type.split('/')[1]
                 self.files_list.append(f_name)
                 fs.save(f_name,f)
@@ -185,7 +185,6 @@ class multiple_inputs(FormView):
         #context['files'] = context['files'].remove('gitkeep')
         # Add in a QuerySet of all the books
         obj = Exam.objects.filter(exam_name=self.kwargs['name'])
-        print("TYPE---->",obj[0].ansKeyImg)
         Answers = extractAnswers(csvPath = obj[0].ansKey, imgPath = obj[0].ansKeyImg)
 
         context['Tester'] = "dsf"
@@ -194,8 +193,6 @@ class multiple_inputs(FormView):
         return context
 
 def delete_img(request,*args,**kwargs):
-    #print("D E L E T E")
-    #url = reverse(url_name, args = args)
     fs=FileSystemStorage(location=r'./functions/inputs/OMR_Files/MobileCameraBased/JE')
     fs.delete(kwargs['fname'])
     return redirect('exam-detail-input',kwargs['exam'])
@@ -219,14 +216,15 @@ def ReportEval(request,*args,**kwargs):
     media_result_dir = FileSystemStorage(location=r'./media/output')
 
     a=r"./functions/inputs/OMR_Files/MobileCameraBased/JE"
-    #l = [a]
 
     report_xl, report_pdf, report_csv = main(Answers, a, directory = True)
 
     to_be_copied = results_dir.open(report_xl,mode='rb')
     media_result_dir.save(report_xl,to_be_copied)
+
     to_be_copied = results_dir.open(report_pdf,mode='rb')
     media_result_dir.save(report_pdf,to_be_copied)
+
     to_be_copied = results_dir.open(report_csv,mode='rb')
     media_result_dir.save(report_csv,to_be_copied)
     print(report_pdf[1::])
