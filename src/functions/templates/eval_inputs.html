@@ -53,7 +53,8 @@
   <div class="row">
     <div class="col">
         <form  method="POST" enctype="multipart/form-data">{% csrf_token %}
-        <div class="col-sm" style=" margin:30px; text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
+        <div class="col-sm" style=" margin:30px; text-align: center; height: 30vh; font-size:24px;
+        border: 3px solid gray; border-radius:50px">
           <p style="margin-top:15px">Upload all images that you want to grade under this test</p>
           <div class="upload-btn-wrapper">
 		  <button class="btn-special">Upload a file{{form.inputs}}</button>
@@ -65,16 +66,22 @@
 
         </form>
 
-          <a class="" href="{% url 'report-eval'%}" id="reportGen" style="margin:30px;"><button type="submit" class="btn btn-special col-sm">Generate Report</button></a>
+          <a class="" href="{% url 'report-eval' %}" id="reportGen" style="margin:30px;"><button type="submit" class="btn btn-special col-sm">Generate Report</button></a>
 
 
 
 
     </div>
     <div class="col">
+
+      <a href="/functions/exam-detail/inputs/delete/all/{{object.first.exam_name}}">
+        <button class="btn btn-light" name="delete_img">Clear all</button></a>
+
       <div class ="files">
         {% for file in files %}
-        <li>{{file}}&nbsp&nbsp&nbsp&nbsp<a href="/functions/exam-detail/inputs/delete/{{file}}/{{object.first.exam_name}}"><button class="btn btn-light" name="delete_img">Delete</button></a></li>
+        <li>{{file}}&nbsp&nbsp&nbsp&nbsp<a href="/functions/exam-detail/inputs/delete/{{file}}/{{object.first.exam_name}}">
+          <button class="btn btn-light" name="delete_img">Delete</button>
+        </a></li>
         {% endfor %}
       </div>
     </div>

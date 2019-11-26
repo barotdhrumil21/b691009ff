@@ -20,6 +20,7 @@ from .views import (upload_view,
                     upload_exam_view,
                     all_templates,
                     all_exams,
+                    exam_answers,
                     exam_detail_view,
                     exam_update_view,
                     exam_delete_view,
@@ -42,6 +43,7 @@ urlpatterns = [
 
 
     path('add-exam/',login_required(upload_exam_view.as_view()),name="exam-adder"),
+    path('add-exam-answers/',login_required(exam_answers),name="exam-answers"),
     path('exams/',login_required(all_exams.as_view()),name='all-exams'),
     path('exam-detail/<str:name>',login_required(exam_detail_view.as_view()),name='exam-detail'),
     path('exam-detail/<int:pk>/update',login_required(exam_update_view.as_view()),name='exam-update'),

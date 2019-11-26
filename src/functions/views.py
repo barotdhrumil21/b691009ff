@@ -79,14 +79,39 @@ def delete_template(request,id,*args,**kwargs):
     return redirect('pdf-adder')
 
 #------------------------------------EXAMS VIEWS-----------------------------------
+def exam_answers(request):
+    global Answers
+    dataFile = request.FILES['datafile']
+    Afile=FileSystemStorage(location=r'./media/temp/')
+    Af_name=dataFile.name
+    Af_extension = dataFile.content_type.split('/')[1]
+    #print(Af_name,Af_extension)
+    Afile.save(Af_name,dataFile)
+    path = "media/temp/"+Af_name
+    Temp = fromImage(imgPath = path)
+    if Temp != {}:
+        Answers = Temp
+    else:
+        Answers = {}
+    Afile.delete(Af_name)
+    #print("Answers:",Answers,"Temp:",Temp)
+    return redirect('exam-adder')
+
 #"/functions/add-exam"
 class upload_exam_view(CreateView):
     model = Exam
     form_class = exam_builder
     template_name = 'examAdder.html'
+    global Answers
+
     def form_valid(self,form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+    def get_context_data(self,*args,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['Answers'] = Answers
+        return context
 
 #"/functions/exams"
 class all_exams(ListView):
@@ -182,7 +207,7 @@ class multiple_inputs(FormView):
             context['files']=os.listdir(r'./functions/inputs/OMR_Files/MobileCameraBased/JE')
         else:
             context['files'] = ''
-        #context['files'] = context['files'].remove('gitkeep')
+        context['files'].remove('gitkeep')
         # Add in a QuerySet of all the books
         obj = Exam.objects.filter(exam_name=self.kwargs['name'])
         Answers = extractAnswers(csvPath = obj[0].ansKey, imgPath = obj[0].ansKeyImg)
@@ -192,12 +217,18 @@ class multiple_inputs(FormView):
         #print(obj[0].ansKey)
         return context
 
-def delete_img(request,*args,**kwargs):
-    fs=FileSystemStorage(location=r'./functions/inputs/OMR_Files/MobileCameraBased/JE')
+
+def delete_img(request, *args, **kwargs):
+    fs=FileSystemStorage(location = r'./functions/inputs/OMR_Files/MobileCameraBased/JE')
+    if kwargs['fname'] == "all":
+        imgs = fs.listdir(path = r'.')[1]
+        imgs.remove('gitkeep')
+        if len(imgs) > 0:
+            for file in imgs:
+                fs.delete(file)
+        return redirect('exam-detail-input',kwargs['exam'])
     fs.delete(kwargs['fname'])
     return redirect('exam-detail-input',kwargs['exam'])
-
-
 #-----------------------------------------EVALUATION VIEWS-----------------------------------------
 
 #EVALUATION VIEWS "/functions/eval"
@@ -217,7 +248,7 @@ def ReportEval(request,*args,**kwargs):
 
     a=r"./functions/inputs/OMR_Files/MobileCameraBased/JE"
 
-    report_xl, report_pdf, report_csv = main(Answers, a, directory = True)
+    report_xl, report_pdf, report_csv, table = main(Answers, a, directory = True)
 
     to_be_copied = results_dir.open(report_xl,mode='rb')
     media_result_dir.save(report_xl,to_be_copied)
@@ -231,7 +262,8 @@ def ReportEval(request,*args,**kwargs):
     context ={
     'result_xl': report_xl,
     'result_pdf': report_pdf[1::],
-    'result_csv': report_csv
+    'result_csv': report_csv,
+    'table': table
     }
     #print(context['result'])
     return render(request,'eval_report.html',context)

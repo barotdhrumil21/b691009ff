@@ -1,5 +1,5 @@
-<div class="results"><h2> Result </h2>
-<h4>Heighest Marks: 100 </h4><h4>Average Marks: 54.16 </h4><h4>Total Students: 6 </h4><table border="1" class="dataframe wide">
+<h2> Result </h2>
+<h4>Highest Marks: 100 </h4><h4>Average Marks: 54.16 </h4><h4>Total Students: 6 </h4><table border="1" class="dataframe wide">
   <thead>
     <tr style="text-align: right;">
       <th></th>
@@ -46,4 +46,4 @@
       <td>2</td>
     </tr>
   </tbody>
-</table></div>
+</table>

@@ -2,6 +2,32 @@
 {% load static %}
 {% block link %}
 <link rel="stylesheet" href="{% static "css/exam_detail.css" %}">
+<style>
+  h2 {
+    text-align: center;
+    font-family: Helvetica, Arial, sans-serif;
+  }
+  table {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 5px;
+    text-align: center;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 90%;
+  }
+  table tbody tr:hover {
+    background-color: #dddddd;
+  }
+  .wide {
+    width: 90%;
+  }
+</style>
 {% endblock link %}
 
 {% block content %}
@@ -37,8 +63,14 @@ All Images Are Graded, Click On The Button Bellow To Download The Report</div>
  color:white; border: 3px solid gray; border-radius:50px; font-size:30px; padding-top:10px; color:white;"  href="/media/output/{{result_csv}}">Download Report CSV</a></button>
 </div>
 
+<div style="border-bottom: 5px solid gray; margin-bottom: 10vh; margin-top: 10vh;"></div>
+<div class="text-center" >
+  {% autoescape off %}
 
-<div class="text-center" style="margin:50px;text-align: center; font-size:24px; ">
+{% for line in table %}
+{{line}}
+{% endfor %}
+{% endautoescape %}
 
 </div>
 <div id="employee_table">

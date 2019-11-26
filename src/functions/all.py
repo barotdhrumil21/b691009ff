@@ -773,7 +773,7 @@ def readResponse(image,name,savedir=None,autoAlign=False):
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        
+
 
 #end imports from utils.py
 
@@ -811,7 +811,7 @@ def report(Status,streak,scheme,qNo,marked,ans,prevmarks,currmarks,marks):
     pass
 
 def evaluate(resp, answers, explain=False):
-    global Sections 
+    global Sections
 
     marks = 0
     #answers = Answers
@@ -897,7 +897,7 @@ def xl2pdf(df, pdf,  title = 'Result'):
         text-align: center;
         font-family: Helvetica, Arial, sans-serif;
       }
-      table { 
+      table {
         margin-left: auto;
         margin-right: auto;
       }
@@ -915,7 +915,7 @@ def xl2pdf(df, pdf,  title = 'Result'):
         background-color: #dddddd;
       }
       .wide {
-        width: 90%; 
+        width: 90%;
       }
     </style>
     </head>
@@ -934,7 +934,7 @@ def xl2pdf(df, pdf,  title = 'Result'):
     #heighest_marks = df['Total Marks'].max()
     #avg_marks = str(df['Total Marks'].mean())[:5]
 
-    ht += '<h4>Heighest Marks: %s </h4>' % df['Total Marks'].max() 
+    ht += '<h4>Highest Marks: %s </h4>' % df['Total Marks'].max()
     ht += '<h4>Average Marks: %s </h4>' % str(df['Total Marks'].mean())[:5]
     ht += '<h4>Total Students: %s </h4>' % len(df)
 
@@ -947,8 +947,9 @@ def xl2pdf(df, pdf,  title = 'Result'):
     except:
         pass
 
+    rlist = ht[:].split('\n')
     with open(r"./functions/media/output/htmlpdftemp/temp.txt", 'w') as f:
-         f.write('<div class="results">' + ht + '</div>')
+         f.write(ht)
 
     with open(r"./functions/media/output/htmlpdftemp/temp.html", 'w') as f:
          f.write(HTML_TEMPLATE1 + ht + HTML_TEMPLATE2)
@@ -958,18 +959,20 @@ def xl2pdf(df, pdf,  title = 'Result'):
 
     pdfkit.from_file(r"./functions/media/output/htmlpdftemp/temp.html", pdf)#, configuration=config)
 
+    return rlist
 
+
+#reading answer_key
 def fromImage(imgPath):
-    imgPath = r"media/" + str(imgPath)
     inOMR = cv2.imread(imgPath, cv2.IMREAD_GRAYSCALE)
     OMRcrop = getROI(inOMR, noCropping=args["noCropping"], noMarkers=args["noMarkers"])
     if(OMRcrop is None):
         return "wrong file"
     OMRresponseDict, final_marked, MultiMarked, multiroll = readResponse(OMRcrop,name = imgPath.split('/')[-1], autoAlign=args["autoAlign"])
-    for key, vals in OMRresponseDict.items():
-        if len(vals) > 1:
-            return "Bad Image"
-    return OMRresponseDict
+    #mainDict = {}
+    #for k, v in OMRresponseDict.items():
+    #    mainDict[k] = [v, str(answers['data'][int(k[1:])-1][1]),str(answers['data'][int(k[1:])-1][2]), str(answers['data'][int(k[1:])-1][3])]
+    return OMRresponseDict#mainDict
 
 #reading answer_key
 def extractAnswers(csvPath = None, imgPath = None):
@@ -1003,7 +1006,7 @@ def extractAnswers(csvPath = None, imgPath = None):
         OMRresponseDict, final_marked, MultiMarked, multiroll = readResponse(OMRcrop,name = imgPath.split('/')[-1], autoAlign=args["autoAlign"])
         mainDict = {}
         for k, v in OMRresponseDict.items():
-            mainDict[k] = [v, str(answers['data'][int(k[1:])-1][1]),str(answers['data'][int(k[1:])-1][2]), str(answers['data'][int(k[1:])-1][3])] 
+            mainDict[k] = [v, str(answers['data'][int(k[1:])-1][1]),str(answers['data'][int(k[1:])-1][2]), str(answers['data'][int(k[1:])-1][3])]
         return mainDict
 
 
@@ -1011,7 +1014,7 @@ def getRanks(df):
     df.sort_values('Total Marks', axis=0, ascending=True, kind='quicksort', na_position='last')
     df['Rank'] = df['Total Marks'].rank(ascending = False, method = 'min').astype(int)
     print(type(df['Total Marks'].rank(ascending = False, method = 'min')))
-    return df 
+    return df
 
 
 
@@ -1048,7 +1051,7 @@ def main(answers, imagePathListOrDirectory, directory=False):
         "Errors_csv": manualDir+'ErrorFiles_'+dis_string+'.csv',
         "BadRollNos_csv": manualDir+'BadRollNoFiles_'+dis_string+'.csv',
 
-        "Results_xlsx": resultDir+'Results_'+dis_string+'.xlsx',      
+        "Results_xlsx": resultDir+'Results_'+dis_string+'.xlsx',
         "MultiMarked_xlsx": manualDir+'MultiMarkedFiles_'+dis_string+'.xlsx',
         "Errors_xlsx": manualDir+'ErrorFiles_'+dis_string+'.xlsx',
         "BadRollNos_xlsx": manualDir+'BadRollNoFiles_'+dis_string+'.xlsx',
@@ -1123,5 +1126,5 @@ def main(answers, imagePathListOrDirectory, directory=False):
     masterDf = getRanks(masterDf)
     masterDf.to_csv(filesMap["Results_csv"], index = False)
     masterDf.to_excel(filesMap["Results_xlsx"], index = False)
-    xl2pdf(masterDf, filesMap["Results_pdf"])
-    return filesMap["Results_xlsx"], filesMap["Results_pdf"], filesMap["Results_csv"]
+    table = xl2pdf(masterDf, filesMap["Results_pdf"])
+    return filesMap["Results_xlsx"], filesMap["Results_pdf"], filesMap["Results_csv"], table
