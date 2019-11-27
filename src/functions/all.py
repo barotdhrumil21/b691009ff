@@ -1013,7 +1013,6 @@ def extractAnswers(csvPath = None, imgPath = None):
 def getRanks(df):
     df.sort_values('Total Marks', axis=0, ascending=True, kind='quicksort', na_position='last')
     df['Rank'] = df['Total Marks'].rank(ascending = False, method = 'min').astype(int)
-    print(type(df['Total Marks'].rank(ascending = False, method = 'min')))
     return df
 
 
