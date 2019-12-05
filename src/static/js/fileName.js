@@ -32,6 +32,7 @@ var fileSelect = document.getElementById('file_select');
 var uploadButton = document.getElementById('upload-button');
 
 function fileUpload(form, action_url, div_id) {
+
     // Create the iframe...
     var iframe = document.createElement("iframe");
     iframe.setAttribute("id", "upload_iframe");
@@ -83,6 +84,18 @@ function fileUpload(form, action_url, div_id) {
 
     // document.getElementById(div_id).innerHTML = "Uploading...";
 }
+
+
+$('#addANS').click(function()
+{ console.log("dajsgdja")
+    var imgVal = $('#file-upload2').val();
+    if(imgVal=='')
+    {
+        alert("empty input file");
+        return false;
+    }
+
+  });
 // $("form#answers").submit(function(e) {
 //     e.preventDefault();
 // 		var formData = new FormData(this);

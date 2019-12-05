@@ -20,7 +20,7 @@ class omr_templates(models.Model):
 class Exam(models.Model):
         user = models.ForeignKey(User,on_delete=models.CASCADE)
         exam_name = models.CharField(max_length = 200)
-        ansKey = models.FileField(null=False,blank=False,upload_to='exams/answer_key/' )
+        ansKey = models.FileField(null=True,blank=True,upload_to='exams/answer_key/' )
         ansKeyImg = models.FileField(default="default.jpg", null=True,blank=True,upload_to='exams/answer_key_img/' )
         template = models.ForeignKey(omr_templates,on_delete=models.PROTECT)
         date = models.DateTimeField(default = timezone.now)

@@ -95,6 +95,7 @@
                   <div class="alert alert-success fade " role="alert" id="rowadd">
                       <strong id="input_data"></strong>
                     </div>
+                    <p id="rowCounter"></p>
                    <button type="button" id="download">Download csv </button>
                    <button type="button" id="empty">Clear table </button>
                   <div id="example-table"></div>
@@ -103,17 +104,10 @@
 
         <div class="row">
           <div style="margin:5px; text-align: center; width:70vh; height: 30vh; font-size:24px;
-          border: 3px solid gray; border-radius:50px">
-            <p style="margin:15px">Fill answers, click on the down arrow above the
-              table and click on one of the options, once you download the file upload it here</p>
-            <div id="inputGroupFile04"></div>
-            <div class="input-group">
-              <div class="custom-file" style="width:25vh;height:7vh; border: 3px solid gray; border-radius:5px">
-                {{form.ansKey}}
-                <label class="custom-file-label inputs" for="inputGroupFile04">upload </label>
+          border: 0px white gray; border-radius:50px">
 
-              </div>
-            </div>
+            <div id="inputGroupFile04"></div>
+
 
 
           </div>
@@ -129,26 +123,26 @@
           </div>
 
         </div>
-  <div class="col-sm" style="text-align: center; height: 15vh;
-  font-size:24px; border: 3px solid gray; border-radius:50px">
-    <p style="margin-top:15px">Click this button after completing the form</p>
+  <div class="col-sm" style="text-align: center; height: 15vh;font-size:24px; border: 3px solid gray; border-radius:50px">
+    <p style="margin-top:15px">Click this button after completing the form and don't forget to fill the answer key table</p>
   <div class="input-group">
-      <button type="submit" class="btn" style="display:inline; border: 3px solid gray;
+      <button type="submit" name="action" value ="ExamBuild" id="exam-submit" disabled class="btn" style="display:inline; border: 3px solid gray;
       border-radius:50px;margin-left:80vh;
       padding:15px;font-size:15px; background-color:#275091; color:white"><b>BUILD EXAM</b></button>
+
   </div>
   </div>
 </form>
 </div><br><br><br><br>
 <form style="margin-left:500px;">{% csrf_token %}
 
-<div class="col-sm" style="position: absolute; margin-top: -58vh; margin-left:35vh; width:60vh; text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
-<p style="margin-top:15px">Upload Correct Answers OMR Here</p>
+<div class="col-sm" style="position: absolute; margin-top: -58vh; margin-left:5vh; width:60vh; text-align: center; height: 30vh; font-size:24px; border: 3px solid gray; border-radius:50px">
+<p style="margin-top:15px">Upload Correct Answers OMR Here!!</p>
 <div class="custom-file" style="margin:20px; width:48vh; height:6vh; border: 3px solid gray; border-radius:5px">
-<input type="file" style="" name="datafile"/></div>
+<input type="file"  name="datafile" required id ="file-upload2" /></div>
 
 <div class="custom-file" style="width:47.5vh; height:6vh; border: 3px solid gray; border-radius:5px; color:red">
-<input type="button" style="" value="Extract answers from uploaded file" id="addANS"
+<input type="submit" style="" value="Extract answers from uploaded file!" id="addANS"
 onClick="fileUpload(this.form,'{% url 'exam-answers' %}','upload'); return false;" ></div>
 
 <div id="upload"></div></div>

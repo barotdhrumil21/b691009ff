@@ -45,6 +45,12 @@ var table = new Tabulator("#example-table", {
             cell.getRow().delete();
             table.redraw(true);
             ii = ii-1;
+            if(Number(ii) < 100){
+              rowCounter = document.getElementById("rowCounter")
+              rowCounter.innerHTML = (100 - Number(ii)) + " rows pending according to selected template!"
+              document.getElementById("exam-submit").disabled = true;
+              document.getElementById("button-access").innerHTML = "Please fill the table in order to build an exam!";
+            }
             console.log("after remove:",ii);
         }},
     ],
@@ -120,7 +126,23 @@ else {
      }, 2000);
 }
 // console.log(table.getRow(1))
+rowCounter = document.getElementById("rowCounter")
+rowCounter.innerHTML = (100 - Number(ii)) + " rows pending according to selected template!"
+
+if ((100 - Number(ii)) == 0 ){
+  document.getElementById("exam-submit").disabled = false;
+  //document.getElementById("button-access").classList.remove('show')
+
+}
+else {
+  document.getElementById("exam-submit").disabled = true;
+  //document.getElementById("button-access").classList.add('show')
+  //buttonAccess = document.getElementById("button-access")
+  //buttonAccess.innerHTML = "Please fill the table in order to build an exam!";
+}
+
 });
+
 
 
 $(window).resize(function(){
@@ -136,4 +158,14 @@ $("#empty").click(function(){
     table.clearData()
     table_data = []
     ii = 0
+    console.log("submitting");
+
 });
+
+
+$("#exam-submit").click(function(){
+
+  console.log("submitting");
+  var data = {csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(), data:table.getData(),action:"TableData"}
+  $.post("/functions/add-exam/",data)
+})

@@ -1,8 +1,11 @@
 import os
 import glob
+import pandas as pd
+from datetime import datetime
 from django.http import HttpResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render,redirect,get_object_or_404
+from django.core.files import File
 #from django.core.urlresolvers import reverse
 from django.views.generic import(
                                     CreateView,
@@ -105,8 +108,39 @@ class upload_exam_view(CreateView):
     global Answers
 
     def form_valid(self,form):
+        list = glob.glob('./media/temp/propogatingCSV*')
+        latest_file = max(list, key=os.path.getctime)
+        f = open(latest_file)
+        myfile = File(f)
         form.instance.user = self.request.user
+        form.instance.ansKey = myfile
         return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        data = request.POST
+        if "data[0][ans]" in data:
+            key = ""
+            iterator = int((len(data.dict()) - 1) / 4)
+            dataarray = []
+            for j in range(iterator):
+                tmp = []
+                for i in ['ans','cans','wans','sub']:
+                    key = "data" + "["+ str(j) +"]" + "["+ str(i) +"]"
+                    tmp.append(data[key])
+                dataarray.append(tmp)
+            df = pd.DataFrame(dataarray, columns =['Ans', 'Correct_Marks','Wrong_Marks','Subject'])
+            Question_no = [i+1 for i in range(iterator)]
+            df.insert(0,"Question_no",Question_no)
+            df.set_index('Question_no')
+            print(df)
+            now = datetime.now()
+            df.to_csv(r'./media/temp/propogatingCSV{}.csv'.format(now.strftime("%d%H%M%S")),index=False)
+        return super().post(request)
+
+
+
 
     def get_context_data(self,*args,**kwargs):
         context = super().get_context_data(**kwargs)
@@ -210,7 +244,8 @@ class multiple_inputs(FormView):
         context['files'].remove('gitkeep')
         # Add in a QuerySet of all the books
         obj = Exam.objects.filter(exam_name=self.kwargs['name'])
-        Answers = extractAnswers(csvPath = obj[0].ansKey, imgPath = obj[0].ansKeyImg)
+        #print(obj[0].ansKey)
+        Answers = extractAnswers(csvPath = obj[0].ansKey)
 
         context['Tester'] = "dsf"
         context['object'] = obj

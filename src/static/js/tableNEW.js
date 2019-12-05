@@ -120,8 +120,11 @@ else {
      }, 2000);
 }
 // console.log(table.getRow(1))
+
 });
 
+rowCounter = document.getElementById("rowCounter")
+rowCounter.innerHTML = 100-Number(ii)
 
 $(window).resize(function(){
     $("#example-table").tabulator("redraw");
@@ -136,4 +139,14 @@ $("#empty").click(function(){
     table.clearData()
     table_data = []
     ii = 0
+    console.log("submitting");
+
 });
+
+
+$("#exam-submit").click(function(){
+
+  console.log("submitting");
+  var data = {csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(), data:table.getData(),action:"TableData"}
+  $.post("/functions/add-exam/",data)
+})

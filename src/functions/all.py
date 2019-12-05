@@ -975,39 +975,21 @@ def fromImage(imgPath):
     return OMRresponseDict#mainDict
 
 #reading answer_key
-def extractAnswers(csvPath = None, imgPath = None):
-    if imgPath == "default.jpg":
-        answerdf = pd.read_csv(csvPath)
-        for i in range(len(answerdf)):
-            answerdf['Question_no'].iloc[i] = int(i + 1)
-        answerdf['Question_no'] = answerdf['Question_no'].astype(int)
-        answerdf = answerdf.set_index('Question_no')
-        answers = answerdf.to_dict('split')
-        mainDict = {}
-        index = 0
-        for i in range(len(answers['index'])):
-            mainDict['q{}'.format(i+1)] = answers['data'][i]
-            index += 1
+def extractAnswers(csvPath = None):
+    path = r"./media/" + str(csvPath)
+    print(path)
+    answerdf = pd.read_csv(path)
+    answerdf['Question_no'] = answerdf['Question_no'].astype(int)
+    answerdf = answerdf.set_index('Question_no')
+    answers = answerdf.to_dict('split')
+    mainDict = {}
+    index = 0
+    for i in range(len(answers['index'])):
+        mainDict['q{}'.format(i+1)] = answers['data'][i]
+        index += 1
 
-        return mainDict
-    else:
-        answerdf = pd.read_csv(csvPath)
-        for i in range(len(answerdf)):
-            answerdf['Question_no'].iloc[i] = int(i + 1)
-        answerdf['Question_no'] = answerdf['Question_no'].astype(int)
-        answerdf = answerdf.set_index('Question_no')
-        answers = answerdf.to_dict('split')
+    return mainDict
 
-        imgPath = r"media/" + str(imgPath)
-        inOMR = cv2.imread(imgPath, cv2.IMREAD_GRAYSCALE)
-        OMRcrop = getROI(inOMR, noCropping=args["noCropping"], noMarkers=args["noMarkers"])
-        if(OMRcrop is None):
-            return "wrong file"
-        OMRresponseDict, final_marked, MultiMarked, multiroll = readResponse(OMRcrop,name = imgPath.split('/')[-1], autoAlign=args["autoAlign"])
-        mainDict = {}
-        for k, v in OMRresponseDict.items():
-            mainDict[k] = [v, str(answers['data'][int(k[1:])-1][1]),str(answers['data'][int(k[1:])-1][2]), str(answers['data'][int(k[1:])-1][3])]
-        return mainDict
 
 
 def getRanks(df):
